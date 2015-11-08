@@ -1,6 +1,8 @@
 var fs = require('fs');
 var marked = require('marked');
 var mkdirp = require('mkdirp');
+var Q = require('q');
+var winston = require('winston');
 var templates = require('./templates.js');
 
 var outDir = null;
@@ -16,42 +18,86 @@ function addPost (filename, path) {
   post.title = filename.substr(indexOfSpace + 1, filename.length).replace(/\.md$/,'');
 
   posts.push(post);
+  return post;
 }
 
-function handleLoadMarkdown(post, err, content) {
-  post.markdown = content.toString();
-  processPost(post);
-}
+function loadMarkdown(post) {
+  var deferred = Q.defer();
+  fs.readFile(post.file, function (err, content) {
+    if (err) {
+      winston.error("Error while loading markdown from '%s'", post.file, err);
+      deferred.reject(err);
+      return;
+    }
 
-function processPost(post) {
-  var renderedPost,
-    postDir = post.date.replace(/-/ig,'/')+'/',
-    pathToPost = postDir+post.title+'.html';
+    winston.debug("Markdown loaded for '%s'", post.file);
 
-  post.html = marked(post.markdown);
-  post.path = pathToPost;
-  renderedPost = templates.get('post')({post:post})
+    post.markdown = content.toString();
+    post.html = marked(post.markdown);
+    post.rendered = templates.get('post')({post:post});
 
-  mkdirp(outDir+postDir, function () {
-    fs.writeFile(outDir+pathToPost, renderedPost, function (err) {if (err) console.log(err);});
+    deferred.resolve(post);
   });
+  return deferred.promise;
 }
 
-function processPostsDirectory(err, files) {
-  var i, path;
+function processPostsDirectory(files) {
+  var i, path,
+    promisses = [];
 
   for (i = 0; i < files.length; i++) {
     path = postsDir+files[i];
-    addPost(files[i], path);
+    winston.verbose("Processing file '%s'", path);
+    promisses.push(loadMarkdown(addPost(files[i], path)).then(writePost));
   }
 
-  console.log(posts.length + ' posts to process.');
-  for (i = 0; i < posts.length; i++) {
-    fs.readFile(posts[i].file, handleLoadMarkdown.bind(this, posts[i]));
-  }
+  return Q.all(promisses);
+}
+
+function writePost(post) {
+  var renderedPost,
+    deferred = Q.defer(),
+    postDir = post.date.replace(/-/ig,'/')+'/',
+    pathToPost = postDir+post.title+'.html';
+
+  post.path = pathToPost;
+
+  winston.debug("Ensuring directory: '%s'", outDir+postDir);
+  mkdirp(outDir+postDir, function (err) {
+    if (err) {
+      winston.error("Error while creating directories: '%s'", outDir+postDir, err);
+      deferred.reject(err);
+      return;
+    }
+
+    winston.debug("Writing post: '%s'", outDir+pathToPost);
+    fs.writeFile(outDir+pathToPost, post.rendered, function (err) {
+      if (err) {
+        winston.error("Error while writing post file: '%s'", post.path, err);
+        deferred.reject(err);
+      } else {
+        deferred.resolve(post);
+      }
+    });
+  });
+
+  return deferred.promise;
 }
 
 exports.processPosts = function (buildDir) {
+  var deferred = Q.defer();
   outDir = buildDir;
-  fs.readdir(postsDir, processPostsDirectory);
+
+  winston.verbose("Reading posts from '%s'", postsDir);
+  fs.readdir(postsDir, function (err, files) {
+    if (err) {
+      winston.error("Error while reading directory.", err);
+      deferred.reject(err);
+    }
+
+    processPostsDirectory(files).then(function () {
+      deferred.resolve(posts);
+    });
+  });
+  return deferred.promise;
 }
