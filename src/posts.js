@@ -1,5 +1,5 @@
 var fs = require('fs');
-var marked = require('marked');
+var markdown = require('./markdown.js');
 var mkdirp = require('mkdirp');
 var Q = require('q');
 var winston = require('winston');
@@ -33,7 +33,7 @@ function loadMarkdown(post) {
     winston.debug("Markdown loaded for '%s'", post.file);
 
     post.markdown = content.toString();
-    post.html = marked(post.markdown);
+    post.html = markdown.render(post.markdown);
     post.rendered = templates.get('post')({post:post});
 
     deferred.resolve(post);

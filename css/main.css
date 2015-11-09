@@ -3,6 +3,11 @@
   font-size: 20px;
 }
 
+code, code *, pre, pre * {
+  font-family: 'Droid Sans Mono';
+  font-size: 16px;
+}
+
 #content {
   margin: 20px auto;
   max-width: 1024px;
@@ -12,11 +17,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
-img {
-  display: inline-block;
-  margin: 0 auto;
-}
-
-pre, code {
-  font-family: 'Droid Sans Mono';
+p {
+  text-align: justify;
 }
