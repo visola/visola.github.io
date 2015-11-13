@@ -1,5 +1,7 @@
 As my first post I'm going to do a very simple command line application that manages one entity called Person. The purpose of this example is to demonstrate how powerful the new Spring Data projects family are.
 
+<!-- more -->
+
 ## Spring Data
 
 Spring Data is a family of projects that aims to create a repository layer. The idea is to have an abstract layer were all the dependencies will point to and different implementations with all kinds of data repositories (SQL and NoSQL), similiar to what JDBC did for SQL databases. So what you'll see when you go to Spring Data project page is one common project that has a bunch of interfaces and helper classes to deal with the abstraction of a repository - and here is where your dependencies should end. And then, a few other projects that implement this abstract layer for a specific data repository. Some examples are: JPA, Hadoop, etc.

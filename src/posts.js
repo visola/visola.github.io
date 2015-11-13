@@ -24,6 +24,8 @@ function addPost (filename, path) {
 function loadMarkdown(post) {
   var deferred = Q.defer();
   fs.readFile(post.file, function (err, content) {
+    var indexOfMore;
+
     if (err) {
       winston.error("Error while loading markdown from '%s'", post.file, err);
       deferred.reject(err);
@@ -34,6 +36,9 @@ function loadMarkdown(post) {
 
     post.markdown = content.toString();
     post.html = markdown.render(post.markdown);
+
+    indexOfMore = post.html.indexOf('<!-- more -->');
+    post.summary = post.html.substr(0, indexOfMore);
     post.rendered = templates.get('post')({post:post});
 
     deferred.resolve(post);
@@ -52,6 +57,10 @@ function processPostsDirectory(files) {
   }
 
   return Q.all(promisses);
+}
+
+function sortPosts(p1, p2) {
+  p1.date.localeCompare(p2.date);
 }
 
 function writePost(post) {
@@ -96,6 +105,7 @@ exports.processPosts = function (buildDir) {
     }
 
     processPostsDirectory(files).then(function () {
+      posts.sort(sortPosts);
       deferred.resolve(posts);
     });
   });
