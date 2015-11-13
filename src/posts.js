@@ -60,7 +60,7 @@ function processPostsDirectory(files) {
 }
 
 function sortPosts(p1, p2) {
-  p1.date.localeCompare(p2.date);
+  return p2.date.localeCompare(p1.date);
 }
 
 function writePost(post) {
