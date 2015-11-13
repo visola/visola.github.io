@@ -1,0 +1,16 @@
+doctype html
+html(lang="en")
+  head
+    include ../head.jade
+    title Welcome to Vinny's Blog
+  body
+    #content
+      include ../menu.jade
+      - for (var i = 0; i < posts.length; i++)
+        - if (i >= 5) break
+          - var post = posts[i]
+            h2
+              a(name=post.title, href=post.path) #{post.title}
+
+            p.published Published on #{post.date}
+            != post.summary
