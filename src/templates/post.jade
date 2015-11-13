@@ -4,4 +4,8 @@ html(lang="en")
     include head.jade
     title= post.title
   body
-    #content!= post.html
+    #content
+      include menu.jade
+      h1= post.title
+      p.published Published on #{post.date}
+      != post.html
