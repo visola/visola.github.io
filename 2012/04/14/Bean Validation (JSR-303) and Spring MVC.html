@@ -1,0 +1,127 @@
+<!DOCTYPE html><html lang="en"><head><link href="https://fonts.googleapis.com/css?family=Hind+Siliguri:600,300|Droid+Sans+Mono" rel="stylesheet" type="text/css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.9.1/styles/solarized_light.min.css"><link type="text/css" rel="stylesheet" href="/css/main.css"><title>Bean Validation (JSR-303) and Spring MVC</title></head><body><div id="content"><p>This is my menu.</p><h1>Bean Validation (JSR-303) and Spring MVC</h1><p class="published">Published on 2012-04-14</p><p>The code for this example can be found at the <a href="https://github.com/visola/bearprogrammer-examples">blog repository in github</a>.</p>
+<p>Validation in web applications normally spread through many lines of code in the client side and in the server side. JSR-303, or Bean Validation, is a standard developed to be part of JPA. It&#39;s a simple and generic way to annotate your entities with specific validation rules and have them validated by some validation engine.</p>
+<p>Hibernate started with validation through annotations and JSR-303 was highly influenced by it (probably completely driven by it). Part of JEE 6, for those who are not using a complete JEE server (like Tomcat), the API can be found in one of Hibernate&#39;s artifact:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>org.hibernate<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>hibernate-validator<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>4.2.0.Final<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>Spring MVC 3 added full support for validation using JSR-303. So the same validation that you use in the persistence layer can also be used in your web layer, at least in the server side. This example will show a simple application that uses Bean Validation to validate a bean before saving it.</p>
+<!-- more -->
+<h2 id="the-example">The Example</h2>
+<p>This simple example does not use a persistence layer. All beans are stored in a TreeMap inside the controller. Only two JSP files are used, one to show all beans in memory and one that is used to edit an existing bean and also to create new ones.</p>
+<p>The validation occurs inside the controller and it&#39;s done automatically by Spring. The controller only checks if there are errors and redirect the user accordingly.</p>
+<p>The edit.jsp page will show the validation errors in a list, so the user can act and try to resend the form again.</p>
+<h2 id="step-1-add-the-validation">Step 1 - Add the validation</h2>
+<p>First thing you need to do is annotate your bean with the correct constraints. The following is the Person class code with the annotations:</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> {</span>
+
+    <span class="hljs-comment">// This is going to be generated on the server-side</span>
+    <span class="hljs-keyword">private</span> Integer id;
+
+    <span class="hljs-annotation">@NotNull</span>
+    <span class="hljs-annotation">@Past</span>
+    <span class="hljs-keyword">private</span> Date birthday;
+
+    <span class="hljs-annotation">@NotNull</span>
+    <span class="hljs-annotation">@Size</span>(min = <span class="hljs-number">1</span>, max = <span class="hljs-number">50</span>)
+    <span class="hljs-keyword">private</span> String firstName;
+
+    <span class="hljs-annotation">@NotNull</span>
+    <span class="hljs-annotation">@Size</span>(min = <span class="hljs-number">1</span>, max = <span class="hljs-number">50</span>)
+    <span class="hljs-keyword">private</span> String lastName;
+
+    <span class="hljs-comment">// Getters and Setters</span>
+
+}
+</code></pre>
+<p>In most cases the constraint annotations are very explicit and self-explanatory. You can find the documentation in <a href="http://docs.oracle.com/javaee/6/api/">JEE 6 API</a>, inside package <code>javax.validation</code>.</p>
+<h2 id="step-2-ask-spring-to-search-for-annotations">Step 2 - Ask Spring to search for annotations</h2>
+<p>Spring needs to know that you want to use JSR-303 validation. To do that, you need to add the following code to your Spring configuration file:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;mvc:annotation-driven /&gt;</span>
+</code></pre>
+<h2 id="step-3-set-the-bean-to-be-validated-and-handle-validation">Step 3 - Set the bean to be validated and handle validation</h2>
+<p>You need to ask the controller to validate your bean using the @Valid annotation. You also need to get the BindingResult through the action parameter. If you don&#39;t set the BindingResult as a parameter, Spring will throw the exception and never call the controller method. The BindingResult object gives you the power to decide what to do if there were binding errors. </p>
+<p><strong>Important!</strong> As soon as you put BindingResult as a parameter in your controller method, all validation is now your responsibility. Spring will validate and put all errors inside the result. It will assume that you are going to handle everything in the controller method that received the result.</p>
+<p>The following is the save method (that doesn&#39;t save, just add the bean to the TreeMap):</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RequestMapping</span>(<span class="hljs-string">"/save"</span>)
+<span class="hljs-keyword">public</span> <span class="hljs-function">ModelAndView <span class="hljs-title">save</span><span class="hljs-params">(@Valid Person person, BindingResult bindingResults)</span> </span>{
+
+    ModelAndView mv = <span class="hljs-keyword">new</span> ModelAndView(<span class="hljs-string">"redirect:all.do"</span>);
+
+    <span class="hljs-comment">// Check for validation errors</span>
+    <span class="hljs-keyword">if</span> (bindingResults.hasErrors()) {
+        mv.setViewName(<span class="hljs-string">"edit"</span>);
+
+        mv.addObject(<span class="hljs-string">"person"</span>, person);
+
+        <span class="hljs-comment">// Add errors to the Model so that they can be used in the view</span>
+        mv.addObject(<span class="hljs-string">"errors"</span>, bindingResults.getFieldErrors());
+
+        <span class="hljs-comment">// Print the errors to the console</span>
+        System.out.println(<span class="hljs-string">"Validation errors:"</span>);
+        <span class="hljs-keyword">for</span> (FieldError <span class="hljs-keyword">error</span> : bindingResults.getFieldErrors()) {
+            System.out.println(<span class="hljs-keyword">error</span>.getField() + <span class="hljs-string">" - "</span> + <span class="hljs-keyword">error</span>.getDefaultMessage());
+        }
+    } <span class="hljs-keyword">else</span> {
+        <span class="hljs-keyword">if</span> (person.getId() == <span class="hljs-keyword">null</span>) {
+            <span class="hljs-comment">// Generate ID</span>
+            person.setId(people.size() + <span class="hljs-number">1</span>);
+        } 
+        people.put(person.getId(), person);
+
+        System.out.println(<span class="hljs-string">"Person saved!"</span>);
+    }
+    <span class="hljs-keyword">return</span> mv;
+}
+</code></pre>
+<h2 id="step-4-show-the-errors-to-the-user">Step 4 - Show the errors to the user</h2>
+<p>The easiest way to show the errors to the user is to loop through all of them and print it in the edit.jsp, where the form is. That way the user can try to fix whatever was wrong and submit the form again. The following is the code for the edit.jsp page:</p>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-title">%@</span> <span class="hljs-attribute">page</span> <span class="hljs-attribute">language</span>=<span class="hljs-value">"java"</span> <span class="hljs-attribute">contentType</span>=<span class="hljs-value">"text/html; charset=UTF-8"</span> <span class="hljs-attribute">pageEncoding</span>=<span class="hljs-value">"UTF-8"</span><span class="hljs-value">%</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">%@</span> <span class="hljs-attribute">taglib</span> <span class="hljs-attribute">uri</span>=<span class="hljs-value">"http://java.sun.com/jsp/jstl/core"</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">"c"</span> %&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">%@</span> <span class="hljs-attribute">taglib</span> <span class="hljs-attribute">uri</span>=<span class="hljs-value">"http://java.sun.com/jsp/jstl/fmt"</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">"fmt"</span> %&gt;</span>
+<span class="hljs-doctype">&lt;!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">http-equiv</span>=<span class="hljs-value">"Content-Type"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"text/html; charset=UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>Edit Person<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">style</span>&gt;</span><span class="css">
+        <span class="hljs-id">#errors</span> <span class="hljs-rules">{
+            <span class="hljs-rule"><span class="hljs-attribute">color</span>:<span class="hljs-value"> red</span></span>;
+        }</span>
+    </span><span class="hljs-tag">&lt;/<span class="hljs-title">style</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">c:if</span> <span class="hljs-attribute">test</span>=<span class="hljs-value">"${errors != null}"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ul</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"errors"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">c:forEach</span> <span class="hljs-attribute">items</span>=<span class="hljs-value">"${errors}"</span> <span class="hljs-attribute">var</span>=<span class="hljs-value">"error"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">li</span>&gt;</span>${error.field}: ${error.defaultMessage}<span class="hljs-tag">&lt;/<span class="hljs-title">li</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">c:forEach</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">c:if</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">form</span> <span class="hljs-attribute">action</span>=<span class="hljs-value">"save.do"</span> <span class="hljs-attribute">method</span>=<span class="hljs-value">"post"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"hidden"</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"id"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"${person.id}"</span> /&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">"firstName"</span>&gt;</span>First name:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"firstName"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"${person.firstName}"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">br</span> /&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">"lastName"</span>&gt;</span>Last name:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"lastName"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"${person.lastName}"</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">br</span> /&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">label</span> <span class="hljs-attribute">for</span>=<span class="hljs-value">"birthday"</span>&gt;</span>Birthday:<span class="hljs-tag">&lt;/<span class="hljs-title">label</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"birthday"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"&lt;fmt:formatDate pattern="</span><span class="hljs-value">yyyy-MM-dd"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"${person.birthday}"</span>/&gt;</span>" /&gt;
+        <span class="hljs-tag">&lt;<span class="hljs-title">br</span> /&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">input</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"submit"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">form</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+</code></pre>
+<h2 id="result">Result</h2>
+<p>If you go to the edit page and try to save a person with a date in the future, you would see the following error:</p>
+<p><img src="/img/blog/bean-validation-001.png" alt="Bean Validation - 001"></p>
+</div></body></html>
