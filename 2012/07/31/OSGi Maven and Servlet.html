@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="en"><head><link href="https://fonts.googleapis.com/css?family=Hind+Siliguri:600,300|Droid+Sans+Mono" rel="stylesheet" type="text/css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.9.1/styles/solarized_light.min.css"><link type="text/css" rel="stylesheet" href="/css/main.css"><title>OSGi Maven and Servlet</title></head><body><div id="content"><h1>OSGi Maven and Servlet</h1><p class="published">Published on 2012-07-31</p><p>I tried a few times before to start developing using OSGi but never had a chance to work with it in the real life so it&#39;s hard to get all the concepts to stick in my head. This post is my way to change that, meaning that I&#39;m trying to learn OSGi deeper and start getting things done using this platform.</p>
+<p>The first thing I wanted to do is to have a good experience with tooling and get Maven to work for me, not against me. This post is showing a simple example on how to configure Maven to generate an OSGi bundle and how to use Declarative Services and Apache Felix Http Whiteboard to quickly deploy a simple servlet.</p>
+<p>The code for this post is in my <a href="https://github.com/visola/bearprogrammer-examples">git repository</a> under the project <code>osgi-maven-example</code>.</p>
+<!-- more -->
+<h2 id="project">Project</h2>
+<p>There are only three files in this project:</p>
+<ul>
+<li><code>pom.xml</code> - Maven project descriptor. Here is where the bundle plugin is added and where all OSGi configuration should go, because Maven completely replaces whatever <code>MANIFEST.MF</code> you put in your workspace by default</li>
+<li><code>src/main/resources/OSGI-INF/SimpleServlet.xml</code> - Component descriptor. Used by the SCR (Service Component Runtime) to decide when to instantiate and activate your service implementation and some other things</li>
+<li><code>SimpleServlet.java</code> - Hello world servlet implementation</li>
+</ul>
+<h2 id="web-in-osgi">Web in OSGi</h2>
+<p>The <code>SimpleServlet</code> is just a normal servlet as expected. There are no differences. I added some <code>println</code> statements to output when each event happens. It could be used normally in a non-OSGi application.</p>
+<p>The OSGi specification provides an HTTP Service that can be used to register servlets and resources. Normally this would require code to get a reference to the service, register the servlet and because of the dynamic nature of the OSGi platform, make sure to unregister the servlet if the service gets unloaded/uninstalled. To avoid that extra hassle, we&#39;ll take advantage of the whiteboard implementation bundle provided by the Apache Felix project.</p>
+<p>So instead of writing a <em>web.xml</em> file that would register the servlet, we need to write a component descriptor that will register the servlet as a provider of the <em>Servlet</em> service. The following is the XML file:</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">component</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"simpleServlet"</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">implementation</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.bearprogrammer.blog.osgi.SimpleServlet"</span>  /&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"alias"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"/hello"</span> /&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-title">service</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">provide</span> <span class="hljs-attribute">interface</span>=<span class="hljs-value">"javax.servlet.Servlet"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">service</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">component</span>&gt;</span>
+</code></pre>
+<p>This descriptor register the <code>SimpleServlet</code> as an implementation that provides the <code>javax.servlet.Servlet</code> service.</p>
+<h2 id="maven-configuration">Maven configuration</h2>
+<p>Maven normally ignores your <code>MANIFEST.MF</code> file so to get things in you need to ask it to add it for you. But OSGi not only needs things in the manifest but also needs complex definitions like import and export packages. Maven already handles dependencies so it would make sense to have that calculated for you somehow. And that is when the bundle plugin comes to hand.</p>
+<p>That plugin not only helps you to generate a well formatted manifest but also calculates the dependencies and import package declarations using the class import statements from the Java code. If you programmed using OSGi before, you know that it is complicated to manage dependencies and the list can get pretty long pretty fast.</p>
+<p>To get the plugin to work, you need to add the following in your <code>pom.xml</code>:</p>
+<pre><code class="lang-xml">...
+<span class="hljs-tag">&lt;<span class="hljs-title">build</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">plugins</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">plugin</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>org.apache.felix<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>maven-bundle-plugin<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">extensions</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">extensions</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">executions</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">execution</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">phase</span>&gt;</span>package<span class="hljs-tag">&lt;/<span class="hljs-title">phase</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">goals</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">goal</span>&gt;</span>bundle<span class="hljs-tag">&lt;/<span class="hljs-title">goal</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">goals</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">execution</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">executions</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">configuration</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">instructions</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Service-Component</span>&gt;</span>
+                        OSGI-INF/SimpleServlet.xml
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">Service-Component</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">instructions</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">configuration</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">plugin</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">plugins</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">build</span>&gt;</span>
+...
+</code></pre>
+<p>There are two important parts here. The first one is that I attached the plugin to the <code>package</code> phase, that way, instead of building a simple JAR file, Maven build will generate an OSGi bundle. The second one is that I added the <code>Service-Component</code> tag inside the <em>instructions</em> to the plugin put inside the manifest file. This is how you get things in. And if you look into the generated jar file, you&#39;ll notice that both, Export and Import packages were generated for you. It also generated information about the bundle using information from the pom.xml. Everything else is just plain old Maven stuff. Dependencies, group and artifact id and version, etc.</p>
+<h2 id="deploying">Deploying</h2>
+<p>There are many OSGi implementations available, the two most widely used are Eclipse Equinox and Apache Felix, both open sources. In this case I used Felix because I still don&#39;t have a good grip on Equinox.</p>
+<p>Felix is very straighforward and you just need to download it and unzip it. Run Maven build to generate the package,  drop the JAR file in the <code>bundle</code> directory inside Felix&#39;s home folder. You&#39;ll also need the HTTP service bundles and the SCR and its dependencies. You can find all of them in the <a href="http://felix.apache.org/site/downloads.cgi">Apache Felix Downloads page</a>. Here is a list of all bundles that I used:</p>
+<pre><code>org.apache.felix.bundlerepository-1.6.6.jar  -- already there
+org.apache.felix.configadmin-1.4.0.jar       -- SCR dependency
+org.apache.felix.gogo.command-0.12.0.jar     -- already there
+org.apache.felix.gogo.runtime-0.10.0.jar     -- already there
+org.apache.felix.gogo.shell-0.10.0.jar       -- already there
+org.apache.felix.http.jetty-2.2.0.jar        -- HTTP Service implementation using Jetty
+org.apache.felix.http.base-2.2.0.jar         -- HTTP Service API
+org.apache.felix.http.whiteboard-2.2.0.jar   -- HTTP Servlet Whiteboard
+org.apache.felix.scr-1.6.0.jar               -- SCR (Service Component Runtime)
+osgi-maven-example-0.0.1-SNAPSHOT.jar        -- My bundle
+</code></pre><p>Then you just need to run it using the command:</p>
+<pre><code class="lang-shell"><span class="hljs-title">java</span> -jar bin/felix.jar
+</code></pre>
+<p>You&#39;ll see the following output:</p>
+<pre><code>[INFO] Http service whiteboard started
+Servlet instantiated.
+Servlet initialized.
+____________________________
+Welcome to Apache Felix Gogo
+
+g!
+</code></pre><p>This shows that the servlet was instantiated and initialized correctly. Now you can go to <a href="http://localhost:8080/hello">http://localhost:8080/hello</a> and see your servlet response.</p>
+</div></body></html>
