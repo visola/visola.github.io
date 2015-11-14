@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><link href="https://fonts.googleapis.com/css?family=Hind+Siliguri:600,300|Droid+Sans+Mono" rel="stylesheet" type="text/css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.9.1/styles/solarized_light.min.css"><link type="text/css" rel="stylesheet" href="/css/main.css"><title>Simple Caching with Spring</title></head><body><div id="content"><h1>Simple Caching with Spring</h1><p class="published">Published on 2012-07-22</p><p>This week an old friend contacted me because he was having memory problems in one of his applications. The problem was very simple: for each user logged in, all application menus and part of the list/combo values were being added to the user session (including some images). That was used to makes things faster, to avoid going to the database multiple times and loading the data all over again.</p>
+<p>The problem with that approach is that each user will have a copy of the data in memory. And in this case, it&#39;s the same data, copied over and over again. After some time, if traffic increases, the JVM will run out of memory. And the situation gets worth when users don&#39;t click the <em>logout</em> button/link, meaning that the session will get stuck until the timeout period has finished.</p>
+<p>To help him I wrote a simple example - that was extended in this post - to demonstrate one approach (there are certainly many others) to cache data in a Spring application. What this example will show is how you can use an extra bean to keep the data cached and up-to-date at the same time.</p>
+<p>Source code for this example is in my <a href="https://github.com/visola/bearprogrammer-examples">github repository</a> under the folder <code>simple-cache</code>.</p>
+<p>This post is not about the new Cache Abstraction provided in Spring 3.1.</p>
+<!-- more -->
+<h2 id="architecture">Architecture</h2>
+<p>This application is very simple. It contains only two controllers, one that saves data <code>WriteController</code> in the database and one that loads data <code>ReadOnlyController</code> from the cache. The one that saves data also needs to clear the cache to make sure that everyone is getting data that is up-to-date.</p>
+<p>Between the read-only controller and the service there&#39;s the cache <code>SimpleCache</code> that stores the data from the service and can be cleared to force a reload the next time data is accessed.</p>
+<p>The following illustration shows how all classes are related:</p>
+<p><img src="/img/blog/spring-simple-cache-architecture.png" alt="Spring simple cache architecture"></p>
+<h2 id="loading-data">Loading Data</h2>
+<p>After starting Tomcat with the application installed and going to <a href="http://localhost:8080/spring-simple-cache/">http://localhost:8080/spring-simple-cache/</a> you&#39;ll see the following: </p>
+<p><img src="/img/blog/spring-simple-cache-example.do.png" alt="Spring simple cache example"></p>
+<p>And this is what you&#39;ll see in the console:</p>
+<pre><code>Controller: /example
+Cache: Reading property test...
+Cache: Checking if data is loaded...
+Cache: Loading data...
+Service: Loading data from database...
+Service: Finished loading data.
+Cache: Data loaded.
+387 ms to process http://localhost:8080/spring-simple-cache/
+</code></pre><p>This was the first time you accessed the page so it needed to load the data from the service. In the service I added a delay to simulate a performance hit because using a memory database is as fast as loading from the cache. To do that, I added a <code>Thread.sleep(200);</code> instruction in the load method. If you load the same page again (hit F5) you should notice a significant performance improve and the page loads almost instantaneously. You&#39;ll also notice a different output in the console:</p>
+<pre><code>Controller: /example
+Cache: Reading property test...
+Cache: Checking if data is loaded...
+Cache: Don&#39;t need to reload data.
+6 ms to process http://localhost:8080/spring-simple-cache/
+</code></pre><p>Now you can see that the data wasn&#39;t loaded from the service, the cache already had the data and that&#39;s what has been returned.</p>
+<h2 id="saving-new-data">Saving new data</h2>
+<p>When new data is added through the <code>WriteController</code>, the cache needs to be clear. To see how this works you can go to the <a href="http://localhost:8080/spring-simple-cache/add.do">add.do</a> action and you&#39;ll get a form to fill out. Fill it out and submit it. You&#39;ll get a message saying that the data was saved. If you go to the console you&#39;ll see the following:</p>
+<pre><code>Controller: /save
+Cache: Clearing cache data...
+Cache: Cache data cleared.
+15 ms to process http://localhost:8080/spring-simple-cache/save.do
+</code></pre><p>That shows that the save action was executed and that the cache was cleared. If you try accessing the <a href="http://localhost:8080/spring-simple-cache/example.do?name=test">Use Cache</a> link again, you&#39;ll see in the console that the data was reloaded from the service:</p>
+<pre><code>Controller: /example
+Cache: Reading property test...
+Cache: Checking if data is loaded...
+Cache: Loading data...
+Service: Loading data from database...
+Service: Finished loading data.
+Cache: Data loaded.
+206 ms to process http://localhost:8080/spring-simple-cache/example.do
+</code></pre><h2 id="configuration">Configuration</h2>
+<p>All the important configuration is in the <code>/WEB-INF/spring-servlet.xml</code> file.</p>
+<p>The first thing we need is to make sure that Spring will autowire everything, so we add the following:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- Enable configuration using annotations --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">context:annotation-config</span> /&gt;</span>
+</code></pre>
+<p>Then we create the datasource that will generate the connection with the database. An in memory H2 database is being used:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- Data source, memory database with H2 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"dataSource"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"org.apache.commons.dbcp.BasicDataSource"</span> <span class="hljs-attribute">destroy-method</span>=<span class="hljs-value">"close"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"driverClassName"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"org.h2.Driver"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"url"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"jdbc:h2:mem:example"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"username"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"sa"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"password"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"sa"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>We need to tell the dispatcher servlet where to find our controllers and views. These are the lines that do that:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- Package to scan for controllers --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">context:component-scan</span> <span class="hljs-attribute">base-package</span>=<span class="hljs-value">"com.bearprogrammer.blog.spring.cache"</span> /&gt;</span>
+
+...
+
+<span class="hljs-comment">&lt;!-- View resolver that will load JSP files from the /WEB-INF/jsp folder --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"viewResolver"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"org.springframework.web.servlet.view.UrlBasedViewResolver"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"viewClass"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"org.springframework.web.servlet.view.JstlView"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"prefix"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">"/WEB-INF/jsp/"</span> /&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"suffix"</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">".jsp"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The last configuration needed is the one that load the actual beans. <code>SimpleCache</code> and the service implementation:</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- Cache instance --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"cache"</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.bearprogrammer.blog.spring.cache.SimpleCache"</span> /&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Start the service and call its initialize method --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"service"</span> <span class="hljs-attribute">init-method</span>=<span class="hljs-value">"initialize"</span> 
+    <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.bearprogrammer.blog.spring.cache.ExampleServiceImpl"</span> /&gt;</span>
+</code></pre>
+<p>To initialize the database, the <code>initialize</code> method is called in the service implementation. And that&#39;s it! Spring will autowire everything you need!</p>
+</div></body></html>
