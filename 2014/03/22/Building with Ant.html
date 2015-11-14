@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head><link href="https://fonts.googleapis.com/css?family=Hind+Siliguri:600,300|Droid+Sans+Mono" rel="stylesheet" type="text/css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap/3.3.5/css/bootstrap.min.css"><link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/8.9.1/styles/solarized_light.min.css"><link type="text/css" rel="stylesheet" href="/css/main.css"><title>Building with Ant</title></head><body><div id="content"><h1>Building with Ant</h1><p class="published">Published on 2014-03-22</p><p>Ant has been around for a while now (first released in 2000) and it can be compared with a scripting language written in XML. XML tags are translated to Java objects and executed calling methods in the objects created. The following image illustrates the relationship between the XML and the Java objects:</p>
+<p><img src="/img/blog/ant-xml-to-java.png" alt="Ant xml to java"></p>
+<p>A project built with Ant begins with a <code>build.xml</code> file where you describe all targets. A target is a set of tasks and can depend on other targets. When you run an Ant build, you tell it what target you want to execute. Ant then creates a target dependency tree for your project, calculates the least amount of targets necessary to get to the requested target and starts executing them from the target that has no dependencies. The build is considered finished when the requested target gets executed or some target failed.</p>
+<p>In this post I&#39;ll explain the two things that I found not so well documented and lacking clear explanation on how to do it: dependency management and code coverage measurement with Jacoco. This was part of the project that I worked on to compare the <a href="http://bearprogrammer.com/2013/12/17/build-tools-for-java/&quot;" title="Build tools for Java">three mainstream Java build tools</a>. The code for this post can be found in my <a href="https://github.com/visola/bearprogrammer-examples/tree/master/build-tools/sample-ant">github repository</a>.</p>
+<!-- more -->
+<h2 id="target-dependency">Target Dependency</h2>
+<p>As explained before, targets in Ant can have dependencies and that dependency influences what is executed in each build. The following is a diagram of the dependency relationship for the targets in this project. This is what Ant will use to chose what targets need to be executed when you ask it to execute some target. I didn&#39;t include the <code>build</code> target to avoid making the diagram even more cluttered.</p>
+<p><img src="/img/blog/ant-task-dependency.png" alt="Ant task dependency"></p>
+<h2 id="ant-build-and-pre-requisites-for-this-code">Ant Build and pre-requisites for this code</h2>
+<p>Building with Ant is straightforward. There&#39;s not much to learn, there are only tasks and the task attributes that you need to setup. Ant won&#39;t do anything for you if you start with an empty build file. And that&#39;s what attract many people to Ant: simplicity and flexibility. Because Ant doesn&#39;t do anything for you, it will only do what you ask it for. That means that you have total control of what will be done and in what order. Some people don&#39;t like the <em>magic</em> that happens behind the scenes on other build tools.</p>
+<p>For the code from this post, besides Ant, you&#39;ll also need <a href="http://ant.apache.org/ivy/">Ivy</a>, which does the dependency management for Ant. To make it work, you download Ivy and copy the the <code>.jar</code> file into the <code>lib</code> directory in your Ant installation.</p>
+<p>You&#39;ll also need the <a href="http://www.eclemma.org/jacoco/trunk/doc/ant.html">Jacoco Ant extension</a> for code coverage. Which you can find in the <code>.zip</code> file from <a href="http://search.maven.org/#search|ga|1|g%3Aorg.jacoco">Maven central</a>.</p>
+<p>To use the two extensions (Jacoco and Ivy) you add the namespace to your <code>build.xml</code>:</p>
+<pre><code class="lang-xml">&lt;<span class="hljs-keyword">project</span> name=<span class="hljs-string">"sample-ant"</span> <span class="hljs-keyword">default</span>=<span class="hljs-string">"build"</span> 
+    xmlns:ivy=<span class="hljs-string">"antlib:org.apache.ivy.ant"</span> 
+    xmlns:jacoco=<span class="hljs-string">"antlib:org.jacoco.ant"</span>&gt;
+</code></pre>
+<p>This will import all tasks from those two libraries into the specified namespaces.</p>
+<h2 id="dependency-management">Dependency Management</h2>
+<p>To manage your dependencies with Ivy, you have to add an extra <a href="https://github.com/visola/bearprogrammer-examples/blob/master/build-tools/sample-ant/ivy.xml">ivy.xml</a> and add the dependencies you need there. To get the same scenarios we have with Maven and Gradle, where you have different classpaths and dependencies for compile, runtime, compile test and run test I used Ivy&#39;s configurations which represent a group of dependencies. I added four configurations:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">configurations</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">conf</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"compile"</span> <span class="hljs-attribute">description</span>=<span class="hljs-value">"Configuration for compile time."</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">conf</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"run"</span> <span class="hljs-attribute">extends</span>=<span class="hljs-value">"compile"</span> 
+    <span class="hljs-attribute">description</span>=<span class="hljs-value">"Configuration for runtime."</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">conf</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"testCompile"</span> <span class="hljs-attribute">extends</span>=<span class="hljs-value">"compile"</span> 
+    <span class="hljs-attribute">description</span>=<span class="hljs-value">"Configuration for compile time for unit tests."</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">conf</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"testRun"</span> <span class="hljs-attribute">extends</span>=<span class="hljs-value">"run,testCompile"</span> 
+    <span class="hljs-attribute">description</span>=<span class="hljs-value">"Configuration for unit test runtime."</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">configurations</span>&gt;</span>
+</code></pre>
+<p>Ivy&#39;s configurations can extend each other so that you don&#39;t need to declare dependencies from compilation on runtime, the ones from compile in test compile and so forth. Next step is to define your dependencies. Something like the following:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependencies</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">dependency</span> <span class="hljs-attribute">org</span>=<span class="hljs-value">"org.hibernate"</span> 
+    <span class="hljs-attribute">name</span>=<span class="hljs-value">"hibernate-entitymanager"</span> 
+    <span class="hljs-attribute">rev</span>=<span class="hljs-value">"4.2.5.Final"</span> 
+    <span class="hljs-attribute">conf</span>=<span class="hljs-value">"compile-&gt;compile"</span> /&gt;</span>
+
+  ...
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependencies</span>&gt;</span>
+</code></pre>
+<p>The last step is to add the <code>retrieve</code> task to some of your target (in your <code>build.xml</code>), like the following:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">target</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"resolve"</span> <span class="hljs-attribute">description</span>=<span class="hljs-value">"Retrieve Ivy dependencies."</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ivy:retrieve</span> <span class="hljs-attribute">pattern</span>=<span class="hljs-value">"${lib.dir}/[conf]/[artifact]-[revision].[ext]"</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">target</span>&gt;</span>
+</code></pre>
+<p>Then, when you run your build, you&#39;ll see Ivy retrieving your artifacts:</p>
+<pre><code>[ivy:retrieve] downloading http://repo1.maven.org/maven2/org/jboss/spec/javax/transaction/jboss-transaction-api_1.1_spec/1.0.1.Final/jboss-transaction-api_1.1_spec-1.0.1.Final.jar ...
+[ivy:retrieve] ................. (24kB)
+[ivy:retrieve] .. (0kB)
+[ivy:retrieve]     [SUCCESSFUL ] org.jboss.spec.javax.transaction#jboss-transaction-api_1.1_spec;1.0.1.Final!jboss-transaction-api_1.1_spec.jar (293ms)
+</code></pre><p>In this case, I set Ivy to put the artifact into the <code>lib</code> directory, which is inside the <code>build</code> directory. I also set it to separate the artifacts in different directories per configuration (pattern attribute). Which means that at the end, you&#39;ll see the following in the <code>lib</code> directory:</p>
+<p><img src="/img/blog/ant-ivy-lib-directory-structure.png" alt="Ant ivy lib directory structure"></p>
+<p>Jar files are copied in each directory, accordingly to each configuration hierarchy. If two configurations have the same artifact, they will be duplicated in each configuration&#39;s directory, but Ivy will only download them once into the cache (<code>~/.ivy2</code> directory).</p>
+<h2 id="test-coverage">Test Coverage</h2>
+<p>For the test coverage, Jacoco comes with the task <code>jacoco:coverage</code> that wraps your unit test task enhancing the classes so that the test execution will be tracked by it and the coverage stored in the <code>.exec</code> file. This file is not readable so we also have to use the <code>jacoco:report</code> which will generate a human readable report from the file.</p>
+<p>The XML will look something like this for wrapping your unit test task:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">jacoco:coverage</span> <span class="hljs-attribute">output</span>=<span class="hljs-value">"file"</span> <span class="hljs-attribute">destfile</span>=<span class="hljs-value">"${reports.dir}/jacoco.exec"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">junit</span> <span class="hljs-attribute">fork</span>=<span class="hljs-value">"yes"</span> <span class="hljs-attribute">dir</span>=<span class="hljs-value">"${build.dir}/temp"</span> <span class="hljs-attribute">failureproperty</span>=<span class="hljs-value">"testFailed"</span> 
+            <span class="hljs-attribute">tempdir</span>=<span class="hljs-value">"${build.dir}/temp"</span>&gt;</span>
+         ... JUnit Task configuration here ...
+    <span class="hljs-tag">&lt;/<span class="hljs-title">junit</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">jacoco:coverage</span>&gt;</span>
+</code></pre>
+<p>For the Jacoco Report, you should do something like the following:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">jacoco:report</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">executiondata</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">file</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">"${reports.dir}/jacoco.exec"</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">executiondata</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">structure</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"${ant.project.name}"</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">classfiles</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">fileset</span> <span class="hljs-attribute">dir</span>=<span class="hljs-value">"${main.src.output}"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">include</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"**/*.class"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">fileset</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">classfiles</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">sourcefiles</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">fileset</span> <span class="hljs-attribute">dir</span>=<span class="hljs-value">"${main.src.dir}"</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">include</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"**/*.java"</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">fileset</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">sourcefiles</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">structure</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">html</span> <span class="hljs-attribute">destdir</span>=<span class="hljs-value">"${reports.dir}/jacoco"</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">jacoco:report</span>&gt;</span>
+</code></pre>
+<p>This tells Jacoco where to find the <code>.exec</code> file, what is in the classpath and what is the source directory of the classes that should be tracked. It also tells that the report should be generated in HTML format (rather then XML or any other) and where to put it. </p>
+<p>To run the unit tests with code coverge, just call <code>ant build</code> or <code>ant test</code> and you&#39;ll see something like the following in the console:</p>
+<pre><code>test:
+[jacoco:coverage] Enhancing junit with coverage
+[junitreport] Processing .../build/reports/test/TESTS-TestSuites.xml to ...
+[junitreport] Loading stylesheet jar:file:.../org/apache/tools/ant/taskdefs/optional/junit/xsl/junit-frames.xsl
+[junitreport] Transform time: 299ms
+[junitreport] Deleting: /var/folders/...
+[jacoco:report] Loading execution data file .../ant/build/reports/jacoco.exec
+[jacoco:report] Writing group &quot;sample-ant&quot; with 3 classes
+</code></pre></div></body></html>
