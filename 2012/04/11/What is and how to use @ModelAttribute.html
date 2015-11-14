@@ -90,29 +90,29 @@
 <p>The same page is used to add a new person and to edit an existing one. To create a new person, we just need to call the edit action without the personId.</p>
 <h2 id="how-does-it-work">How does it work</h2>
 <p>If you execute the application and check the application server logs, you&#39;ll see the following when going to all.do:</p>
-<pre><code><span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> all
+<pre><code>&gt;&gt; getPerson
+&gt;&gt; all
 </code></pre><p>You can see that getPerson was called but it didn&#39;t load any record because it didn&#39;t receive a personId (unless you pass that as parameter, normally we wouldn&#39;t want to do that).</p>
 <p>If you click in the <em>New Person</em> link you&#39;ll be redirected to edit.do passing no personId. That means that no person will be loaded and you&#39;ll see the following in the log:</p>
-<pre><code><span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> edit
+<pre><code>&gt;&gt; getPerson
+&gt;&gt; edit
 </code></pre><p>Filling the form and saving a new person will show the following in the log:</p>
-<pre><code><span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> save
-  <span class="hljs-prompt">&gt;&gt; </span>created <span class="hljs-symbol">is:</span> null
-<span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> all
+<pre><code>&gt;&gt; getPerson
+&gt;&gt; save
+  &gt;&gt; created is: null
+&gt;&gt; getPerson
+&gt;&gt; all
 </code></pre><p>You can see that the person was not loaded, but it was saved and created was null. You can also see that there&#39;s no save.jsp, the save method is just redirecting to the all.do that&#39;s why there a new call to the getPerson and all method.</p>
 <p>The most important part and reason of all this is when you click in the link of the name of a person in the all page. Just save the person (or change something if you will). Saving it will show the following in the logs (from where you clicked on the edit to the redirect to the all):</p>
-<pre><code><span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> <span class="hljs-constant">Person</span> loaded
-<span class="hljs-prompt">&gt;&gt;</span> edit
-<span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> <span class="hljs-constant">Person</span> loaded
-<span class="hljs-prompt">&gt;&gt;</span> save
-  <span class="hljs-prompt">&gt;&gt;</span>created <span class="hljs-symbol">is:</span> java.util.<span class="hljs-constant">GregorianCalendar</span>[time=<span class="hljs-number">1333675805450</span>,areFieldsSet=true,areAllFieldsSet=true,...
-<span class="hljs-prompt">&gt;&gt;</span> getPerson
-<span class="hljs-prompt">&gt;&gt;</span> all
+<pre><code>&gt;&gt; getPerson
+&gt;&gt; Person loaded
+&gt;&gt; edit
+&gt;&gt; getPerson
+&gt;&gt; Person loaded
+&gt;&gt; save
+  &gt;&gt;created is: java.util.GregorianCalendar[time=1333675805450,areFieldsSet=true,areAllFieldsSet=true,...
+&gt;&gt; getPerson
+&gt;&gt; all
 </code></pre><p>You can see that in this case the person was loaded in both cases: edit and save. The edit loaded it to show it in the jsp page. The save loaded it so it will not overwrite the created date for the person.</p>
 <h2 id="what-happened">What happened</h2>
 <p>Spring is going to call your @ModelAttribute method and merge the model and all objects that are in it with whatever comes from the request. The following is an image that shows that:</p>
