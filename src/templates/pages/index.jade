@@ -8,8 +8,9 @@ html(lang="en")
       include ../menu.jade
       - for (var i = 0; i < posts.length; i++)
         - var post = posts[i]
-          h2
-            a(name=post.title, href=post.path) #{post.title}
+          section.post
+            h2
+              a(name=post.title, href=post.path) #{post.title}
 
-          p.published Published on #{post.date}
-          != post.summary
+            p.published Published on #{post.date}
+            != post.summary

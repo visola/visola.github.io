@@ -1,6 +1,22 @@
 * {
-  font-family: 'Hind Siliguri', sans-serif;
+  color: rgb(68,68,68);
+  font-family: 'Quattrocento', serif;
   font-size: 20px;
+}
+
+a {
+  border-bottom: 1px dashed;
+  color: rgb(74, 102, 150);
+  font-size: inherit;
+}
+
+a:hover {
+  border-bottom: 1px solid;
+  text-decoration: none;
+}
+
+body {
+  background: #e9e9e9;
 }
 
 code, code *, pre, pre * {
@@ -10,17 +26,51 @@ code, code *, pre, pre * {
 
 #content {
   margin: 20px auto;
-  max-width: 1024px;
+  max-width: 800px;
 }
 
 #content img {
-  max-width: 1024px;
+  max-width: 800px;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
+h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
+  border-bottom: none;
+}
+
 p {
   text-align: justify;
+}
+
+.published {
+  font-size: 0.7em;
+}
+
+section.post {
+  margin-bottom: 50px;
+}
+
+section.post::after {
+  background: #ccc;
+  content: ' ';
+  display: block;
+  height: 1px;
+  margin: 25px auto 0;
+  width: 85%;
+}
+
+section.post h2 {
+  font-size: 2em;
+  font-weight: normal;
+}
+
+section.post p {
+  margin: 35px 0;
+}
+
+section.post p.published {
+  margin: 10px 0 0;
 }
