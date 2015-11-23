@@ -6,6 +6,7 @@ var winston = require('winston');
 var templates = require('./templates.js');
 
 var outDir = null;
+var inputDir;
 var posts = [];
 var postsDir = 'posts/';
 
@@ -39,7 +40,7 @@ function loadMarkdown(post) {
 
     indexOfMore = post.html.indexOf('<!-- more -->');
     post.summary = post.html.substr(0, indexOfMore);
-    post.rendered = templates.get('post')({post:post});
+    post.rendered = templates.get(inputDir, 'post')({post:post});
 
     deferred.resolve(post);
   });
@@ -93,9 +94,11 @@ function writePost(post) {
   return deferred.promise;
 }
 
-exports.processPosts = function (buildDir) {
+exports.processPosts = function (buildDir, blogDir) {
   var deferred = Q.defer();
   outDir = buildDir;
+  inputDir = blogDir;
+  postsDir = blogDir + postsDir;
 
   winston.verbose("Reading posts from '%s'", postsDir);
   fs.readdir(postsDir, function (err, files) {

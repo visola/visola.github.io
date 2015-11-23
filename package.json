@@ -1,6 +1,6 @@
 {
   "name": "blog",
-  "main": "init.js",
+  "main": "main.js",
   "dependencies": {
     "highlight.js": "^8.9.1",
     "jade": "^1.11.0",
