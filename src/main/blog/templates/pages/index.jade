@@ -14,3 +14,14 @@ html(lang="en")
 
             p.published Published on #{post.date}
             != post.summary
+
+      if hasMore || nextPage > 1
+        .older
+          if nextPage > 2
+            a(href='index-#{nextPage - 2}.html') Newer posts
+          else if nextPage == 2
+            a(href='index.html') Newer posts
+          if nextPage > 1 && hasMore
+            | &nbsp;|&nbsp;
+          if hasMore
+            a(href='index-#{nextPage}.html') Older posts
