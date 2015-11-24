@@ -4,7 +4,7 @@ var templates = require('./templates.js');
 var winston = require('winston');
 
 var outputDir;
-var pagesDir = 'pages/';
+var pagesDir;
 
 function processIndex(posts) {
   var index = templates.get(pagesDir+'index')({posts:posts});
@@ -16,6 +16,6 @@ function processIndex(posts) {
 
 exports.generatePages = function (buildDir, blogDir, posts) {
   outputDir = buildDir;
-  pagesDir = blogDir + pagesDir;
+  pagesDir = blogDir + 'pages/';
   processIndex(posts);
 }

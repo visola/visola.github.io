@@ -8,7 +8,7 @@ var templates = require('./templates.js');
 var outDir = null;
 var inputDir;
 var posts = [];
-var postsDir = 'posts/';
+var postsDir;
 
 function addPost (filename, path) {
   var indexOfSpace = filename.indexOf(' '),
@@ -98,7 +98,8 @@ exports.processPosts = function (buildDir, blogDir) {
   var deferred = Q.defer();
   outDir = buildDir;
   inputDir = blogDir;
-  postsDir = blogDir + postsDir;
+  posts = [];
+  postsDir = blogDir + 'posts/';
 
   winston.verbose("Reading posts from '%s'", postsDir);
   fs.readdir(postsDir, function (err, files) {
