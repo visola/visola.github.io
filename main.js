@@ -7,6 +7,7 @@ var modulesDir = './src/main/js/';
 var commander = require('commander');
 var pages = require(modulesDir+'pages.js');
 var posts = require(modulesDir+'posts.js');
+var rss = require(modulesDir+'rss.js');
 var winston = require('winston');
 
 // ---- MAIN
@@ -16,7 +17,8 @@ winston.info('Initializing...');
 function build() {
   posts.processPosts(buildDir, blogDir).then(function (posts) {
     winston.info('%d posts processed.', posts.length);
-    pages.generatePages(buildDir, blogDir, posts);
+    rss.generateFeed(buildDir, posts.slice());
+    pages.generatePages(buildDir, blogDir, posts.slice());
   });
 }
 
