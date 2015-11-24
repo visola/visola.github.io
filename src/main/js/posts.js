@@ -68,7 +68,8 @@ function writePost(post) {
   var renderedPost,
     deferred = Q.defer(),
     postDir = post.date.replace(/-/ig,'/')+'/',
-    pathToPost = postDir+post.title+'.html';
+    postTitle = post.title.toLowerCase().replace(/[\W-]+/g,'-').replace('-+','-'),
+    pathToPost = postDir+postTitle+'.html';
 
   post.path = pathToPost;
 
