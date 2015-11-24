@@ -24,7 +24,7 @@ function processIndex(posts) {
       posts:page
     });
 
-    winston.debug('Writing index to: %s',outputDir+file);
+    winston.debug('Writing to: %s',outputDir+file);
     fs.writeFile(outputDir+file, output, function (err) {
       if (err) winston.error('Error while writing index.html', err);
     });
