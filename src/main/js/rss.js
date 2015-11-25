@@ -38,6 +38,6 @@ exports.generateFeed = function (buildDir, posts) {
   try {
     generateFeed(posts);
   } catch (e) {
-    console.error(e);
+    winston.error(e);
   }
 };
