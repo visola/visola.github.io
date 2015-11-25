@@ -67,9 +67,9 @@ function sortPosts(p1, p2) {
 function writePost(post) {
   var renderedPost,
     deferred = Q.defer(),
-    postDir = post.date.replace(/-/ig,'/')+'/',
     postTitle = post.title.toLowerCase().replace(/[\W-]+/g,'-').replace('-+','-'),
-    pathToPost = postDir+postTitle+'.html';
+    postDir = post.date.replace(/-/ig,'/')+'/'+postTitle+'/',
+    pathToPost = postDir+'index.html';
 
   post.path = pathToPost;
 
