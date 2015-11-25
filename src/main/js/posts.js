@@ -12,11 +12,17 @@ var postsDir;
 
 function addPost (filename, path) {
   var indexOfSpace = filename.indexOf(' '),
-    post = {};
-
-  post.file = path;
-  post.date = filename.substr(0, indexOfSpace);
-  post.title = filename.substr(indexOfSpace + 1, filename.length).replace(/\.md$/,'');
+    postDate = filename.substr(0, indexOfSpace),
+    postTitle = filename.substr(indexOfSpace + 1, filename.length).replace(/\.md$/,''),
+    cleanedTitle = postTitle.toLowerCase().replace(/[\W-]+/g,'-').replace('-+','-'),
+    postDir = postDate.replace(/-/ig,'/')+'/'+cleanedTitle+'/',
+    post = {
+      date: postDate,
+      title: postTitle,
+      file: path,
+      dir: postDir,
+      path: postDir+'index.html'
+    };
 
   posts.push(post);
   return post;
@@ -66,31 +72,30 @@ function sortPosts(p1, p2) {
 
 function writePost(post) {
   var renderedPost,
-    deferred = Q.defer(),
-    postTitle = post.title.toLowerCase().replace(/[\W-]+/g,'-').replace('-+','-'),
-    postDir = post.date.replace(/-/ig,'/')+'/'+postTitle+'/',
-    pathToPost = postDir+'index.html';
+    deferred = Q.defer();
 
-  post.path = pathToPost;
-
-  winston.debug("Ensuring directory: '%s'", outDir+postDir);
-  mkdirp(outDir+postDir, function (err) {
-    if (err) {
-      winston.error("Error while creating directories: '%s'", outDir+postDir, err);
-      deferred.reject(err);
-      return;
-    }
-
-    winston.debug("Writing post: '%s'", outDir+pathToPost);
-    fs.writeFile(outDir+pathToPost, post.rendered, function (err) {
+  try {
+    winston.debug("Ensuring directory: '%s'", post.dir);
+    mkdirp(post.dir, function (err) {
       if (err) {
-        winston.error("Error while writing post file: '%s'", post.path, err);
+        winston.error("Error while creating directories: '%s'", post.dir, err);
         deferred.reject(err);
-      } else {
-        deferred.resolve(post);
+        return;
       }
+
+      winston.debug("Writing post: '%s'", post.path);
+      fs.writeFile(post.path, post.rendered, function (err) {
+        if (err) {
+          winston.error("Error while writing post file: '%s'", post.path, err);
+          deferred.reject(err);
+        } else {
+          deferred.resolve(post);
+        }
+      });
     });
-  });
+  } catch (e) {
+    deferred.reject(e);
+  }
 
   return deferred.promise;
 }

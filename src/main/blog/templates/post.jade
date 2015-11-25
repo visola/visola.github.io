@@ -1,5 +1,8 @@
 extends ../templates/base.jade
 
+block head
+  link(rel='canonical', href='/#{post.path}')
+
 block content
   h1= post.title
   p.published Published on #{post.date}
