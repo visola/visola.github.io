@@ -18,7 +18,7 @@ function processIndex(posts) {
     } else {
       file = 'index-'+pageCount+'.html';
     }
-    output = templates.get(inputDir, 'pages/index')({
+    output = templates.get(inputDir, 'index')({
       hasMore: posts.length > 0,
       nextPage: pageCount + 1,
       posts:page
@@ -33,7 +33,11 @@ function processIndex(posts) {
 }
 
 exports.generatePages = function (buildDir, blogDir, posts) {
-  outputDir = buildDir;
-  inputDir = blogDir;
-  processIndex(posts);
+  try {
+    outputDir = buildDir;
+    inputDir = blogDir;
+    processIndex(posts);
+  } catch (e) {
+    winston.error('Error while processing pages.', e);
+  }
 }

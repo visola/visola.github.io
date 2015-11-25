@@ -24,7 +24,7 @@ code, code *, pre, pre * {
   font-size: 16px;
 }
 
-#content {
+#content, #footer {
   margin: 20px auto;
   max-width: 800px;
 }
@@ -33,12 +33,56 @@ code, code *, pre, pre * {
   max-width: 800px;
 }
 
+#footer section {
+  font-size: 0.7em;
+  text-align: right;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
 }
 
 h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
   border-bottom: none;
+}
+
+#header {
+  border-bottom: 1px solid #ccc;
+  margin: 20px auto 0;
+  max-width: 800px;
+  padding-bottom: 10px;
+  position: relative;
+  vertical-align: top;
+}
+
+#header a {
+  border-bottom: none;
+}
+
+#header h2 {
+  display: inline-block;
+  margin: 0 10px;
+  top: 5px;
+  width: 300px;
+}
+
+#header img.me {
+  border-radius: 50px;
+  width: 50px;
+}
+
+#header section.links {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+#header section.links a {
+  padding-left: 5px;
+}
+
+#header section.links img {
+  width: 24px;
 }
 
 .older {

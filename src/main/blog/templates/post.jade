@@ -1,11 +1,6 @@
-doctype html
-html(lang="en")
-  head
-    include head.jade
-    title= post.title
-  body
-    #content
-      include menu.jade
-      h1= post.title
-      p.published Published on #{post.date}
-      != post.html
+extends ../templates/base.jade
+
+block content
+  h1= post.title
+  p.published Published on #{post.date}
+  != post.html

@@ -1,0 +1,13 @@
+doctype html
+html(lang="en")
+  head
+    include head.jade
+    title Vinny's Blog #{(post && post.title) ? ' - ' + post.title : ''}
+    block head
+  body
+    include header.jade
+    #content
+      block content
+    #footer
+      section.attribution
+        | Windows 8 Vector Icon set by <a href="http://icons8.com/">Icons8</a>

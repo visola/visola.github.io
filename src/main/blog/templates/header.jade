@@ -1,0 +1,15 @@
+mixin imageLink(link, image)
+  a(href=link)
+    img(src=image)
+  
+#header
+  a(href="/")
+    img.me(src='/img/me.jpg')
+  h2
+    a(href="/") Vinny's Blog
+  section.links
+    +imageLink('http://twitter.com/IsolaVinicius', '/img/twitter.png')
+    +imageLink('http://stackoverflow.com/users/2731402/visola', '/img/stackoverflow.png')
+    +imageLink('https://github.com/visola/', '/img/github.png')
+    | &nbsp;&nbsp;
+    +imageLink('/rss.xml', '/img/rss.png')
