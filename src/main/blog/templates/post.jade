@@ -5,5 +5,5 @@ block head
 
 block content
   h1= post.title
-  p.published Published on #{post.date}
+  p.published Published on #{post.date} #{post.author ? `by ${post.author}` : ''}
   != post.html

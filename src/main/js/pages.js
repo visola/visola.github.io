@@ -21,7 +21,7 @@ function processIndex(posts) {
     output = templates.get(inputDir, 'index')({
       hasMore: posts.length > 0,
       nextPage: pageCount + 1,
-      posts:page
+      posts: page
     });
 
     winston.debug('Writing to: %s',outputDir+file);

@@ -4,6 +4,7 @@ var mkdirp = require('mkdirp');
 var Q = require('q');
 var winston = require('winston');
 var templates = require('./templates.js');
+var yaml = require('js-yaml');
 
 var outDir = null;
 var inputDir;
@@ -11,7 +12,8 @@ var posts = [];
 var postsDir;
 
 function addPost (filename, path) {
-  var indexOfSpace = filename.indexOf(' '),
+  var deferred = Q.defer(),
+    indexOfSpace = filename.indexOf(' '),
     postDate = filename.substr(0, indexOfSpace),
     postTitle = filename.substr(indexOfSpace + 1, filename.length).replace(/\.md$/,''),
     cleanedTitle = postTitle.toLowerCase().replace(/[\W-]+/g,'-').replace('-+','-'),
@@ -24,14 +26,8 @@ function addPost (filename, path) {
       path: postDir+'index.html'
     };
 
-  posts.push(post);
-  return post;
-}
-
-function loadMarkdown(post) {
-  var deferred = Q.defer();
-  fs.readFile(post.file, function (err, content) {
-    var indexOfMore;
+  fs.readFile(post.file, function (err, rawContent) {
+    var metadata, split;
 
     if (err) {
       winston.error("Error while loading markdown from '%s'", post.file, err);
@@ -39,17 +35,37 @@ function loadMarkdown(post) {
       return;
     }
 
-    winston.debug("Markdown loaded for '%s'", post.file);
+    split = rawContent.toString().split(/-{5,}/);
 
-    post.markdown = content.toString();
-    post.html = markdown.render(post.markdown);
+    if (split.length > 1) {
+      metadata = yaml.load(split[0]);
+      winston.debug("Metadata and markdown loaded for post: '%s'", post.file);
+      Object.assign(post, metadata);
 
-    indexOfMore = post.html.indexOf('<!-- more -->');
-    post.summary = post.html.substr(0, indexOfMore);
-    post.rendered = templates.get(inputDir, 'post')({post:post});
+      post.markdown = split[1];
+    } else {
+      winston.debug("Markdown loaded for '%s'", post.file);
+      post.markdown = split[0];
+    }
 
+    posts.push(post);
     deferred.resolve(post);
   });
+
+  return deferred.promise;
+}
+
+function loadMarkdown(post) {
+  var deferred = Q.defer();
+
+  post.html = markdown.render(post.markdown);
+
+  indexOfMore = post.html.indexOf('<!-- more -->');
+  post.summary = post.html.substr(0, indexOfMore);
+  post.rendered = templates.get(inputDir, 'post')({post:post});
+
+  deferred.resolve(post);
+
   return deferred.promise;
 }
 
@@ -60,7 +76,7 @@ function processPostsDirectory(files) {
   for (i = 0; i < files.length; i++) {
     path = postsDir+files[i];
     winston.verbose("Processing file '%s'", path);
-    promisses.push(loadMarkdown(addPost(files[i], path)).then(writePost));
+    promisses.push(addPost(files[i], path).then(loadMarkdown).then(writePost));
   }
 
   return Q.all(promisses);

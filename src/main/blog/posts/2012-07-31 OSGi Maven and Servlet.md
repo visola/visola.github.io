@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: java, osgi, maven, servlet
+----------
 I tried a few times before to start developing using OSGi but never had a chance to work with it in the real life so it's hard to get all the concepts to stick in my head. This post is my way to change that, meaning that I'm trying to learn OSGi deeper and start getting things done using this platform.
 
 The first thing I wanted to do is to have a good experience with tooling and get Maven to work for me, not against me. This post is showing a simple example on how to configure Maven to generate an OSGi bundle and how to use Declarative Services and Apache Felix Http Whiteboard to quickly deploy a simple servlet.
@@ -25,7 +28,7 @@ So instead of writing a *web.xml* file that would register the servlet, we need 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <component name="simpleServlet">
-		
+
 	<implementation class="com.bearprogrammer.blog.osgi.SimpleServlet"  />
 
 	<property name="alias" value="/hello" />

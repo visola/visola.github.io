@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: java, spring, model, attribute, annotation
+----------
 You can get the code for this post in the [blog repository in github](https://github.com/visola/bearprogrammer-examples).
 
 Spring MVC is one of the easiest and most powerful MVC framework to build web applications in Java. With all the features that it has available it is impossible to know everything. But in most cases, when you ask the question: "Can Spring MVC do [put something complex and unexpected here]?" the answer is yes. And when it can't, the answer is: it has a place for you to hook your code in and do whatever you need.
@@ -23,7 +26,7 @@ The controller is a normal POJO with one special Spring annotation: @Controller.
 ```java
 @Controller
 public class PersonController {
-	
+
 	// The repository is being injected using autowired
 	@Autowired
 	private PersonRepository personRepository;
@@ -45,12 +48,12 @@ So we create a getPerson method that will load the entity if the personId parame
 @ModelAttribute
 public Model getPerson(Integer personId, Model model) {
 	System.out.println(">> getPerson");
-	
+
 	if (personId != null) {
 		model.addAttribute("person", personRepository.findOne(personId));
 		System.out.println(">> Person loaded");
 	}
-	
+
 	return model;
 }
 ```
@@ -80,12 +83,12 @@ public Person edit(Person person) {
 @RequestMapping("/save")
 public String save(Person person) {
 	System.out.println(">> save");
-	
+
 	System.out.println("\t>> created is: " + person.getCreated());
 	if (person.getCreated() == null) {
 		person.setCreated(Calendar.getInstance());
 	}
-	
+
 	personRepository.save(person);
 	return "redirect:all.do";
 }
@@ -93,26 +96,26 @@ public String save(Person person) {
 
 You can see that I added a System.out.println to each one of them so we can track what's going on. The save method receives a Person instance. Spring will search for objects in the Model to fill that argument. In this case, it will be the person that was retrieved in the getPerson method.
 
-The edit method doesn't do anything, just return the person it received from the getPerson method. That object will be in the request, as an attribute, available to the view. Following you can see a piece of the JSP that uses the person, if available: 
+The edit method doesn't do anything, just return the person it received from the getPerson method. That object will be in the request, as an attribute, available to the view. Following you can see a piece of the JSP that uses the person, if available:
 
 ```html
 <form action="save.do" method="post">
 	<input type="hidden" name="personId" value="${person.id}" />
-	
+
 	<label for="firstName">First name:</label>
 	<input name="firstName" value="${person.firstName}" />
 	<br />
-	
+
 	<label for="lastName">Last name:</label>
 	<input name="lastName" value="${person.lastName}" />
 	<br />
-	
+
 	<c:if test="${person.created != null}">
-		Created: 
+		Created:
 		<fmt:formatDate value="${person.created.time}" pattern="yyyy-MM-dd HH:mm:ss.SSS" />
 		<br />
 	</c:if>
-	
+
 	<input type="submit" value="Save" />
 </form>
 ```

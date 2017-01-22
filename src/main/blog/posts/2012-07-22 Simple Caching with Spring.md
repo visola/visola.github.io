@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: java, spring, cache, caching
+----------
 This week an old friend contacted me because he was having memory problems in one of his applications. The problem was very simple: for each user logged in, all application menus and part of the list/combo values were being added to the user session (including some images). That was used to makes things faster, to avoid going to the database multiple times and loading the data all over again.
 
 The problem with that approach is that each user will have a copy of the data in memory. And in this case, it's the same data, copied over and over again. After some time, if traffic increases, the JVM will run out of memory. And the situation gets worth when users don't click the *logout* button/link, meaning that the session will get stuck until the timeout period has finished.
@@ -22,7 +25,7 @@ The following illustration shows how all classes are related:
 
 ## Loading Data
 
-After starting Tomcat with the application installed and going to http://localhost:8080/spring-simple-cache/ you'll see the following: 
+After starting Tomcat with the application installed and going to http://localhost:8080/spring-simple-cache/ you'll see the following:
 
 ![Spring simple cache example](/img/blog/spring-simple-cache-example.do.png)
 
@@ -121,7 +124,7 @@ The last configuration needed is the one that load the actual beans. `SimpleCach
 <bean id="cache" class="com.bearprogrammer.blog.spring.cache.SimpleCache" />
 
 <!-- Start the service and call its initialize method -->
-<bean id="service" init-method="initialize" 
+<bean id="service" init-method="initialize"
 	class="com.bearprogrammer.blog.spring.cache.ExampleServiceImpl" />
 ```
 

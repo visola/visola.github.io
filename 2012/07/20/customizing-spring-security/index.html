@@ -3,7 +3,7 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 ga('create', 'UA-70095095-1', 'auto');
-ga('send', 'pageview');</script><title>Vinny's Blog  - Customizing Spring Security</title><link rel="canonical" href="/2012/07/20/customizing-spring-security/index.html"></head><body><div id="header"><a href="/"><img src="/img/me.jpg" class="me"></a><h2><a href="/">Vinny's Blog</a></h2><section class="links"><a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png"></a><a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png"></a><a href="https://github.com/visola/"><img src="/img/github.png"></a>&nbsp;&nbsp;<a href="/rss.xml"><img src="/img/rss.png"></a></section></div><div id="content"><h1>Customizing Spring Security</h1><p class="published">Published on 2012-07-20</p><p><a href="http://static.springsource.org/spring-security/site/">Spring Security</a> is a very powerful and customizable security framework for JEE applications. This post will show how to integrate it seamlessly with your application setting up a custom login and logout.</p>
+ga('send', 'pageview');</script><title>Vinny's Blog  - Customizing Spring Security</title><link rel="canonical" href="/2012/07/20/customizing-spring-security/index.html"></head><body><div id="header"><a href="/"><img src="/img/me.jpg" class="me"></a><h2><a href="/">Vinny's Blog</a></h2><section class="links"><a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png"></a><a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png"></a><a href="https://github.com/visola/"><img src="/img/github.png"></a>&nbsp;&nbsp;<a href="/rss.xml"><img src="/img/rss.png"></a></section></div><div id="content"><h1>Customizing Spring Security</h1><p class="published">Published on 2012-07-20 by Vinicius Isola</p><p><a href="http://static.springsource.org/spring-security/site/">Spring Security</a> is a very powerful and customizable security framework for JEE applications. This post will show how to integrate it seamlessly with your application setting up a custom login and logout.</p>
 <p>You&#39;ll also learn how to add a custom filter with very specific behavior and how to integrate with <a href="http://www.springsource.org/spring-data/jpa">Spring Data</a> so that your users can be loaded from a repository and avoid all the hassle of dealing with JDBC or Hibernate.</p>
 <p>The code for this example can be found in my <a href="https://github.com/visola/bearprogrammer-examples">GitHub Repository</a>. For this post, there are three projects involved: <code>root</code>, <code>spring-security-first-user</code> and <code>user-model</code>. The root project contains dependency management and the user-model can be reused for any other project involving spring security.</p>
 <!-- more -->
@@ -45,10 +45,10 @@ ga('send', 'pageview');</script><title>Vinny's Blog  - Customizing Spring Securi
     <span class="hljs-tag">&lt;<span class="hljs-title">authentication-provider</span> <span class="hljs-attribute">user-service-ref</span>=<span class="hljs-value">"userRepository"</span>&gt;</span>
         <span class="hljs-comment">&lt;!-- Password encoder is configured above. --&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">password-encoder</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"passwordEncoder"</span>&gt;</span>
-            <span class="hljs-comment">&lt;!-- 
+            <span class="hljs-comment">&lt;!--
                 It will use the username as the salt, this is important because its the behavior in
                 the save method of the customized user repository. If not setup correctly, it will
-                never match the password. 
+                never match the password.
             --&gt;</span>
             <span class="hljs-tag">&lt;<span class="hljs-title">salt-source</span> <span class="hljs-attribute">user-property</span>=<span class="hljs-value">"username"</span> /&gt;</span>
         <span class="hljs-tag">&lt;/<span class="hljs-title">password-encoder</span>&gt;</span>
@@ -61,21 +61,21 @@ ga('send', 'pageview');</script><title>Vinny's Blog  - Customizing Spring Securi
 <h2 id="custom-login-and-logout-pages">Custom login and logout pages</h2>
 <p>Custom login and logout pages is a very common scenario because normally a web site/application already have a defined template that needs to be followed. Spring Security provides a default login page but allows you to change it to point to whatever page/action you want.</p>
 <p>For this example <code>login.do</code> will be used as the login page and <code>logout.do</code> as the logout page. The following is the configuration for that.</p>
-<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- 
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!--
     auto-config="true": auto configure as far as possible
-    use-expressions="true": use expression to determine who can access what 
+    use-expressions="true": use expression to determine who can access what
 --&gt;</span>
 <span class="hljs-tag">&lt;<span class="hljs-title">http</span> <span class="hljs-attribute">auto-config</span>=<span class="hljs-value">"true"</span> <span class="hljs-attribute">use-expressions</span>=<span class="hljs-value">"true"</span>&gt;</span>
     ...
 
-    <span class="hljs-comment">&lt;!-- 
+    <span class="hljs-comment">&lt;!--
         Configure the custom login page.
-        login-page="/login.do": where the user will be redirected when 
+        login-page="/login.do": where the user will be redirected when
         a login page needs to be rendered
     --&gt;</span>
     <span class="hljs-tag">&lt;<span class="hljs-title">form-login</span> <span class="hljs-attribute">login-page</span>=<span class="hljs-value">"/login.do"</span> /&gt;</span>
 
-    <span class="hljs-comment">&lt;!-- 
+    <span class="hljs-comment">&lt;!--
         Configure the custom logout page.
         invalidate-session="true": invalidate user session after logout
         logout-success-url="/logout.do": where the user will be redirected to
@@ -96,7 +96,7 @@ ga('send', 'pageview');</script><title>Vinny's Blog  - Customizing Spring Securi
     <span class="hljs-comment">// If no user in the database, add first user authentication</span>
     <span class="hljs-keyword">if</span> (userCount == <span class="hljs-number">0</span>) {
         SecurityContextHolder.getContext().setAuthentication(FIRST_USER_AUTHENTICATION);
-        <span class="hljs-comment">// If going into first user create or save page, let it pass </span>
+        <span class="hljs-comment">// If going into first user create or save page, let it pass</span>
         <span class="hljs-keyword">if</span> (httpRequest.getRequestURL().toString().endsWith(FIRST_USER_CREATE_URL) ||
                 httpRequest.getRequestURL().toString().endsWith(FIRST_USER_SAVE_URL)) {
             chain.doFilter(request, response);
@@ -126,16 +126,16 @@ ga('send', 'pageview');</script><title>Vinny's Blog  - Customizing Spring Securi
 <h2 id="the-filter-stack">The Filter Stack</h2>
 <p>For this filter to work correctly, we need to add it to the filter stack. The first thing we need to define is where in the stack is the correct place to put your custom filter. For this filter a security context is needed so it needs to come after the <code>SECURITY_CONTEXT_FILTER</code>, where the context is created or restored (from a session).  But it needs to come before Spring Security tries to authenticate the user (we know that there is no user in the database), so it needs to come before <code>FORM_LOGIN_FILTER</code>. To do that, you just need to add the <code>custom-filter</code> tag using the <code>before</code> attribute:</p>
 <pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- Custom filter bean --&gt;</span>
-<span class="hljs-tag">&lt;<span class="hljs-title">beans:bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"createFirstUserFilter"</span> 
+<span class="hljs-tag">&lt;<span class="hljs-title">beans:bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"createFirstUserFilter"</span>
     <span class="hljs-attribute">class</span>=<span class="hljs-value">"com.bearprogrammer.spring.security.firstuser.filter.CreateFirstUserFilter"</span>
     <span class="hljs-attribute">init-method</span>=<span class="hljs-value">"start"</span> /&gt;</span>
 
 <span class="hljs-tag">&lt;<span class="hljs-title">http</span> <span class="hljs-attribute">auto-config</span>=<span class="hljs-value">"true"</span> <span class="hljs-attribute">use-expressions</span>=<span class="hljs-value">"true"</span>&gt;</span>
     ...
-    <span class="hljs-comment">&lt;!-- 
+    <span class="hljs-comment">&lt;!--
         This is where the custom filter is being added. It's being added
         just before authentication happens, that way, we already have a
-        valid security context but not tried to authenticate yet. 
+        valid security context but not tried to authenticate yet.
     --&gt;</span>        
     <span class="hljs-tag">&lt;<span class="hljs-title">custom-filter</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">"createFirstUserFilter"</span> <span class="hljs-attribute">before</span>=<span class="hljs-value">"FORM_LOGIN_FILTER"</span>  /&gt;</span>
     ...

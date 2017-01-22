@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: java, spring, security
+----------
 [Spring Security](http://static.springsource.org/spring-security/site/) is a very powerful and customizable security framework for JEE applications. This post will show how to integrate it seamlessly with your application setting up a custom login and logout.
 
 You'll also learn how to add a custom filter with very specific behavior and how to integrate with [Spring Data](http://www.springsource.org/spring-data/jpa) so that your users can be loaded from a repository and avoid all the hassle of dealing with JDBC or Hibernate.
@@ -63,10 +66,10 @@ In this example, the data will come from the `UserRepository` and SHA-1 will be 
 	<authentication-provider user-service-ref="userRepository">
 		<!-- Password encoder is configured above. -->
 		<password-encoder ref="passwordEncoder">
-			<!-- 
+			<!--
 				It will use the username as the salt, this is important because its the behavior in
 				the save method of the customized user repository. If not setup correctly, it will
-				never match the password. 
+				never match the password.
 			-->
 			<salt-source user-property="username" />
 		</password-encoder>
@@ -87,21 +90,21 @@ Custom login and logout pages is a very common scenario because normally a web s
 For this example `login.do` will be used as the login page and `logout.do` as the logout page. The following is the configuration for that.
 
 ```xml
-<!-- 
+<!--
 	auto-config="true": auto configure as far as possible
-	use-expressions="true": use expression to determine who can access what 
+	use-expressions="true": use expression to determine who can access what
 -->
 <http auto-config="true" use-expressions="true">
 	...
-		
-	<!-- 
+
+	<!--
 		Configure the custom login page.
-		login-page="/login.do": where the user will be redirected when 
+		login-page="/login.do": where the user will be redirected when
 		a login page needs to be rendered
 	-->
 	<form-login login-page="/login.do" />
-		
-	<!-- 
+
+	<!--
 		Configure the custom logout page.
 		invalidate-session="true": invalidate user session after logout
 		logout-success-url="/logout.do": where the user will be redirected to
@@ -126,29 +129,29 @@ The following is the code in the `doFilter` of the filter:
 ```java
 public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 	HttpServletRequest httpRequest = (HttpServletRequest) request;
-		
+
 	// If no user in the database, add first user authentication
 	if (userCount == 0) {
 		SecurityContextHolder.getContext().setAuthentication(FIRST_USER_AUTHENTICATION);
-		// If going into first user create or save page, let it pass 
+		// If going into first user create or save page, let it pass
 		if (httpRequest.getRequestURL().toString().endsWith(FIRST_USER_CREATE_URL) ||
 				httpRequest.getRequestURL().toString().endsWith(FIRST_USER_SAVE_URL)) {
 			chain.doFilter(request, response);
-				
+
 			// If just saved first user, update user count
 			if (httpRequest.getRequestURL().toString().endsWith(FIRST_USER_SAVE_URL)) {
 				updateUserCount();
-					
+
 				// Clear security context
 				SecurityContextHolder.getContext().setAuthentication(null);
 			}
-				
+
 		// Otherwise, redirect to first user create page
 		} else {
 			HttpServletResponse httpResponse = (HttpServletResponse) response;
 			httpResponse.sendRedirect(httpRequest.getContextPath() + FIRST_USER_CREATE_URL);
 		}
-			
+
 	} else { // If there's already a user in the database
 		chain.doFilter(request, response);
 	}
@@ -167,16 +170,16 @@ For this filter to work correctly, we need to add it to the filter stack. The fi
 
 ```xml
 <!-- Custom filter bean -->
-<beans:bean id="createFirstUserFilter" 
+<beans:bean id="createFirstUserFilter"
 	class="com.bearprogrammer.spring.security.firstuser.filter.CreateFirstUserFilter"
 	init-method="start" />
 
 <http auto-config="true" use-expressions="true">
 	...
-	<!-- 
+	<!--
 		This is where the custom filter is being added. It's being added
 		just before authentication happens, that way, we already have a
-		valid security context but not tried to authenticate yet. 
+		valid security context but not tried to authenticate yet.
 	-->		
 	<custom-filter ref="createFirstUserFilter" before="FORM_LOGIN_FILTER"  />
 	...
@@ -194,10 +197,10 @@ Don't forget to map the correct access to each resource. Login and logout pages 
 	<!-- Pages that everyone can access -->
 	<intercept-url pattern="/login.do" access="isAnonymous()" />
 	<intercept-url pattern="/logout.do" access="isAnonymous()" />
-	
+
 	<!-- First user creation -->
 	<intercept-url pattern="/firstUser/**" access="hasRole('firstuser')" />
-		
+
 	<!-- All other pages needs an authenticated user -->
 	<intercept-url pattern="/**" access="isFullyAuthenticated()" />
 	...

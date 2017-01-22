@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: service, repository, dao, data layer, data
+----------
 The first time I heard the term *service layer* I was intrigued by it because I always used a *Data Access Object* to access  my data. I thought it was just a *new way to refer to the same thing*. Of course I was wrong. A couple of years later I started to use Spring Data and again I was confronted with the *Repository* a *different name for the same thing*, at least that was what I thought, and again, I was wrong.
 
 I'm not the kind of person that settles down until I get a complete answer for the problem, I really hate when I don't have a precise and detailed answer. That's why I decided to take some time and research deeper and write down my findings for all of you that are thinking the same way and get lost every time you need to name your data access layer objects.
@@ -36,11 +39,11 @@ I mentioned that this pattern is polemic because if you search the web for it yo
 
 ![Flow of data with a repository](/img/blog/repository-uow-flow-001.png)
 
-1. The controller initiates an unit of work; 
-1. The controller requests objects from the repository; 
-1. Repository loads the data and return the objects to the controller; 
-1. Controller modifies the objects attached to the unit of work; 
-1. Controller asks the unit of work to commit the changes; 
+1. The controller initiates an unit of work;
+1. The controller requests objects from the repository;
+1. Repository loads the data and return the objects to the controller;
+1. Controller modifies the objects attached to the unit of work;
+1. Controller asks the unit of work to commit the changes;
 1. Unit of work saves the object in the data layer.
 
 ## Data Access Object

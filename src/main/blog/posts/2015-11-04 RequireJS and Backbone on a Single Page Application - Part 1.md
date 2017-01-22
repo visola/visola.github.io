@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: javascript, backbone, requirejs
+----------
 Building single page applications isn't easy. As the app grows and gets more complex your Javascript code gets harder to maintain and duplicate logic start spreading all over the place. Breaking your code in well defined and self contained small modules help to keep the complexity low and organize the logic in an encapsulated and predictable way. But to do that it means that you now need some kind of dependency management system in place.
 
 [RequireJS](http://requirejs.org/) helps you with that. With it, creating new modules is as easy as calling a function and declaring dependency is as easy as passing an argument to that function.
@@ -61,7 +64,7 @@ This project uses some other frameworks and libraries. Below is a list of all of
 With all the code in place, you can setup your `index.html` page. This is going to be the page where everything is going to be loaded from - the `single page` in your `single page application`. What you need to add to it is: the basic html structure where your app is going to render on, styles and links to css files and one single `script` tag like the following:
 
 ```html
-<script data-main="/js/main.js" 
+<script data-main="/js/main.js"
   src="/js/lib/require-2.1.20.js">
 </script>
 ```

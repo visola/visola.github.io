@@ -10,7 +10,7 @@ block content
         h2
           a(name=post.title, href=post.path) #{post.title}
 
-        p.published Published on #{post.date}
+        p.published Published on #{post.date} #{post.author ? `by ${post.author}` : ''}
         != post.summary
 
   if hasMore || nextPage > 1

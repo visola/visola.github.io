@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: testing, test, java, gretty, cucumber, selenium, gradle
+----------
 The code used in this post is a complete web application built with Spring WebMVC, Spring Data and Spring Security. It contains a lot more than what is explained here and I hope to come back to it in later posts. The code can be found in my [Github repository](https://github.com/visola/bearprogrammer-examples/tree/master/complete-to-do).
 
 For this post I'll be focusing on how you can test a web application using Cucumber and Selenium. I'll be using the [Gretty](https://github.com/akhikhl/gretty/) plugin to start a web container during the build. I've picked this plugin because of the built-in setup for integration tests.
@@ -18,7 +21,7 @@ This content is from a [feature file](https://github.com/visola/bearprogrammer-e
 
 ## Integration Test with Cucumber
 
-[Cucumber JVM](https://github.com/cucumber/cucumber-jvm) is a Jar file that contains a main class which can be run like any other Java command. To run it from Gradle I set up a task which I called `integrationTest` of type `JavaExec` and passed all the parameters expected. 
+[Cucumber JVM](https://github.com/cucumber/cucumber-jvm) is a Jar file that contains a main class which can be run like any other Java command. To run it from Gradle I set up a task which I called `integrationTest` of type `JavaExec` and passed all the parameters expected.
 
 Before running this class we need to make sure that the glue code and all its dependencies are compiled and ready. For that I created two configurations: integrationTestCompile and integrationTestRuntime. These extend from functionalTestCompile and functionTestRuntime respectively, which extends from testCompile and testRuntime, meaning that if you use JUnit for your unit tests, you won't have to add the dependency again for functional nor integration tests, since they will inherit it. I also added one source set called integrationTest which will expect (by convention) your integration test classes to be in the `src/integrationTest/java` folder and your resources to be in the `src/integrationTest/resources` folder.
 
@@ -33,14 +36,14 @@ task integrationTest (type:JavaExec, dependsOn:integrationTestClasses) {
     classpath = project.sourceSets.integrationTest.runtimeClasspath
     // omitted
     main = 'cucumber.api.cli.Main'
-    mustRunAfter functionalTest // We don't want to run integration tests if functional test haven't past 
+    mustRunAfter functionalTest // We don't want to run integration tests if functional test haven't past
     inputs.files fileTree(dir:'src/integrationTest/features',include:'**/*.feature')
     outputs.files "${buildDir}/reports/tests/integration"
     // omitted
 }
 ```
 
-Line 2 will add this task as dependency for check, which is part of the build. So when you run `gradle build` it will run all tests, including the integration tests. 
+Line 2 will add this task as dependency for check, which is part of the build. So when you run `gradle build` it will run all tests, including the integration tests.
 
 Line 3 sets the arguments that are passed to Cucumber, which are the `strict` flag, to make the command fail if a step is not yet defined. The `f` argument, which sets the format for the report (next argument also). The `glue` argument to set the package to scan for glue code. The last argument is the path where to find feature files, which should go into the `src/integrationTest/features` folder.
 

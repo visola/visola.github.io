@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: build, ant, java
+----------
 Ant has been around for a while now (first released in 2000) and it can be compared with a scripting language written in XML. XML tags are translated to Java objects and executed calling methods in the objects created. The following image illustrates the relationship between the XML and the Java objects:
 
 ![Ant xml to java](/img/blog/ant-xml-to-java.png)
@@ -25,8 +28,8 @@ You'll also need the [Jacoco Ant extension](http://www.eclemma.org/jacoco/trunk/
 To use the two extensions (Jacoco and Ivy) you add the namespace to your `build.xml`:
 
 ```xml
-<project name="sample-ant" default="build" 
-    xmlns:ivy="antlib:org.apache.ivy.ant" 
+<project name="sample-ant" default="build"
+    xmlns:ivy="antlib:org.apache.ivy.ant"
     xmlns:jacoco="antlib:org.jacoco.ant">
 ```
 
@@ -39,11 +42,11 @@ To manage your dependencies with Ivy, you have to add an extra [ivy.xml](https:/
 ```xml
 <configurations>
   <conf name="compile" description="Configuration for compile time."/>
-  <conf name="run" extends="compile" 
+  <conf name="run" extends="compile"
     description="Configuration for runtime."/>
-  <conf name="testCompile" extends="compile" 
+  <conf name="testCompile" extends="compile"
     description="Configuration for compile time for unit tests."/>
-  <conf name="testRun" extends="run,testCompile" 
+  <conf name="testRun" extends="run,testCompile"
     description="Configuration for unit test runtime."/>
 </configurations>
 ```
@@ -52,9 +55,9 @@ Ivy's configurations can extend each other so that you don't need to declare dep
 
 ```xml
 <dependencies>
-  <dependency org="org.hibernate" 
-    name="hibernate-entitymanager" 
-    rev="4.2.5.Final" 
+  <dependency org="org.hibernate"
+    name="hibernate-entitymanager"
+    rev="4.2.5.Final"
     conf="compile->compile" />
 
   ...
@@ -92,7 +95,7 @@ The XML will look something like this for wrapping your unit test task:
 
 ```xml
 <jacoco:coverage output="file" destfile="${reports.dir}/jacoco.exec">
-    <junit fork="yes" dir="${build.dir}/temp" failureproperty="testFailed" 
+    <junit fork="yes" dir="${build.dir}/temp" failureproperty="testFailed"
             tempdir="${build.dir}/temp">
          ... JUnit Task configuration here ...
     </junit>
@@ -122,7 +125,7 @@ For the Jacoco Report, you should do something like the following:
 </jacoco:report>
 ```
 
-This tells Jacoco where to find the `.exec` file, what is in the classpath and what is the source directory of the classes that should be tracked. It also tells that the report should be generated in HTML format (rather then XML or any other) and where to put it. 
+This tells Jacoco where to find the `.exec` file, what is in the classpath and what is the source directory of the classes that should be tracked. It also tells that the report should be generated in HTML format (rather then XML or any other) and where to put it.
 
 To run the unit tests with code coverge, just call `ant build` or `ant test` and you'll see something like the following in the console:
 

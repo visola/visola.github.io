@@ -24,7 +24,7 @@ function build() {
 
 commander
   .version('1.0')
-  .option('-s, --server', 'Add peppers')
+  .option('-s, --server')
   .parse(process.argv);
 
 if (commander.server) {

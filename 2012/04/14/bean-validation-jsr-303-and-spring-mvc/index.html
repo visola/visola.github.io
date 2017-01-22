@@ -3,7 +3,7 @@
 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 ga('create', 'UA-70095095-1', 'auto');
-ga('send', 'pageview');</script><title>Vinny's Blog  - Bean Validation (JSR-303) and Spring MVC</title><link rel="canonical" href="/2012/04/14/bean-validation-jsr-303-and-spring-mvc/index.html"></head><body><div id="header"><a href="/"><img src="/img/me.jpg" class="me"></a><h2><a href="/">Vinny's Blog</a></h2><section class="links"><a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png"></a><a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png"></a><a href="https://github.com/visola/"><img src="/img/github.png"></a>&nbsp;&nbsp;<a href="/rss.xml"><img src="/img/rss.png"></a></section></div><div id="content"><h1>Bean Validation (JSR-303) and Spring MVC</h1><p class="published">Published on 2012-04-14</p><p>The code for this example can be found at the <a href="https://github.com/visola/bearprogrammer-examples">blog repository in github</a>.</p>
+ga('send', 'pageview');</script><title>Vinny's Blog  - Bean Validation (JSR-303) and Spring MVC</title><link rel="canonical" href="/2012/04/14/bean-validation-jsr-303-and-spring-mvc/index.html"></head><body><div id="header"><a href="/"><img src="/img/me.jpg" class="me"></a><h2><a href="/">Vinny's Blog</a></h2><section class="links"><a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png"></a><a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png"></a><a href="https://github.com/visola/"><img src="/img/github.png"></a>&nbsp;&nbsp;<a href="/rss.xml"><img src="/img/rss.png"></a></section></div><div id="content"><h1>Bean Validation (JSR-303) and Spring MVC</h1><p class="published">Published on 2012-04-14 by Vinicius Isola</p><p>The code for this example can be found at the <a href="https://github.com/visola/bearprogrammer-examples">blog repository in github</a>.</p>
 <p>Validation in web applications normally spread through many lines of code in the client side and in the server side. JSR-303, or Bean Validation, is a standard developed to be part of JPA. It&#39;s a simple and generic way to annotate your entities with specific validation rules and have them validated by some validation engine.</p>
 <p>Hibernate started with validation through annotations and JSR-303 was highly influenced by it (probably completely driven by it). Part of JEE 6, for those who are not using a complete JEE server (like Tomcat), the API can be found in one of Hibernate&#39;s artifact:</p>
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
@@ -47,7 +47,7 @@ ga('send', 'pageview');</script><title>Vinny's Blog  - Bean Validation (JSR-303)
 <pre><code class="lang-xml"><span class="hljs-tag">&lt;mvc:annotation-driven /&gt;</span>
 </code></pre>
 <h2 id="step-3-set-the-bean-to-be-validated-and-handle-validation">Step 3 - Set the bean to be validated and handle validation</h2>
-<p>You need to ask the controller to validate your bean using the @Valid annotation. You also need to get the BindingResult through the action parameter. If you don&#39;t set the BindingResult as a parameter, Spring will throw the exception and never call the controller method. The BindingResult object gives you the power to decide what to do if there were binding errors. </p>
+<p>You need to ask the controller to validate your bean using the @Valid annotation. You also need to get the BindingResult through the action parameter. If you don&#39;t set the BindingResult as a parameter, Spring will throw the exception and never call the controller method. The BindingResult object gives you the power to decide what to do if there were binding errors.</p>
 <p><strong>Important!</strong> As soon as you put BindingResult as a parameter in your controller method, all validation is now your responsibility. Spring will validate and put all errors inside the result. It will assume that you are going to handle everything in the controller method that received the result.</p>
 <p>The following is the save method (that doesn&#39;t save, just add the bean to the TreeMap):</p>
 <pre><code class="lang-java"><span class="hljs-annotation">@RequestMapping</span>(<span class="hljs-string">"/save"</span>)
@@ -73,7 +73,7 @@ ga('send', 'pageview');</script><title>Vinny's Blog  - Bean Validation (JSR-303)
         <span class="hljs-keyword">if</span> (person.getId() == <span class="hljs-keyword">null</span>) {
             <span class="hljs-comment">// Generate ID</span>
             person.setId(people.size() + <span class="hljs-number">1</span>);
-        } 
+        }
         people.put(person.getId(), person);
 
         System.out.println(<span class="hljs-string">"Person saved!"</span>);

@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: build, gradle, java
+----------
 Gradle is a build system that was build from the lessons learned from Ant and Maven. Similarly with Ant, where you have a XML namespace to write build scripts, Gradle is a [DSL](http://en.wikipedia.org/wiki/Domain-specific_language) on top of Groovy that helps you write build scripts. But it goes further with many plugins and conventions (like Maven) that make it possible to get a build up and running with just a few lines of Groovy.
 
 A Gradle build starts with a `build.gradle` file. This file contains plugins that you apply to your build, dependencies that your project need to compile, package and run, repositories where your dependencies will be loaded from, plugin configurations and custom tasks. All those are written with a cleverly build model that makes your build scripts readable, maintainable and easy to extend.
@@ -46,7 +49,7 @@ You can see that it ran the build in half the time because all the tasks were up
 
 ## Plugins and Conventions
 
-Another major difference between this build and the Ant build is the size of the build scripts. A simple project like this one has 200+ lines of XML in Ant (not counting Ivy XMLs), meanwhile the Gradle build script has only 30 lines. That's less than 6 times less code to maintain. That difference comes from the plugins. 
+Another major difference between this build and the Ant build is the size of the build scripts. A simple project like this one has 200+ lines of XML in Ant (not counting Ivy XMLs), meanwhile the Gradle build script has only 30 lines. That's less than 6 times less code to maintain. That difference comes from the plugins.
 
 In Gradle you apply plugins to your build and you get many tasks for free. These tasks have conventions that, if you follow them, require zero (or almost zero) configuration. If you don't want to follow them, you can just tell the plugins where your files will be or whatever else you want to be different on and it will run the tasks following the new instructions.
 
@@ -69,7 +72,7 @@ apply plugin : 'jacoco'
 apply plugin : 'java'
 ```
 
-The application plugin builds a runnable java application for you in a zip file. It generates a shell script for unix systems and a batch file for Windows machines (in Ant those would have to be created by hand and updated or processed during build time with classpath information). That script finds the `java` command, setup environment variables and the classpath for your application to run. The plugin also add all your runtime dependencies in the zip file so that it will "just run". 
+The application plugin builds a runnable java application for you in a zip file. It generates a shell script for unix systems and a batch file for Windows machines (in Ant those would have to be created by hand and updated or processed during build time with classpath information). That script finds the `java` command, setup environment variables and the classpath for your application to run. The plugin also add all your runtime dependencies in the zip file so that it will "just run".
 
 The application plugin also gives you a task to run your java application with the correct dependencies (compile and process resources). Gradle takes care of running only what's needed:
 

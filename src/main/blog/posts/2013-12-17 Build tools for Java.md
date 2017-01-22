@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: build, tools, java, ant, maven, gradle
+----------
 More than a year ago [I wrote a post about](/2012/06/03/Beginning with Maven and M2.html "Beginning with Maven and M2") how I started to use Maven to build my Java applications and how much I loved it! Things changed a lot since then and I, like many others, am moving my projects to [Gradle](http://www.gradle.org). In this post - and a few more to come - I'll be talking about build tools for Java and make some comparisons and explain why I moved to Gradle.
 
 This content started from a recent presentation that I gave at work about build tools. The idea was to make a comparison between the three most widespread build tools for Java: [Ant](http://ant.apache.org/), [Maven](http://maven.apache.org/) and Gradle. I thought it would be cool to have a project - simple but with some complex dependencies - built using all three of them. With that it would be easy to compare, apples to apples, how each one works and what are the advantages and disadvantages of each one.

@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: java, spring, bean, validation
+----------
 The code for this example can be found at the [blog repository in github](https://github.com/visola/bearprogrammer-examples).
 
 Validation in web applications normally spread through many lines of code in the client side and in the server side. JSR-303, or Bean Validation, is a standard developed to be part of JPA. It's a simple and generic way to annotate your entities with specific validation rules and have them validated by some validation engine.
@@ -33,7 +36,7 @@ public class Person {
 
 	// This is going to be generated on the server-side
 	private Integer id;
-	
+
 	@NotNull
 	@Past
 	private Date birthday;
@@ -63,7 +66,7 @@ Spring needs to know that you want to use JSR-303 validation. To do that, you ne
 
 ## Step 3 - Set the bean to be validated and handle validation
 
-You need to ask the controller to validate your bean using the @Valid annotation. You also need to get the BindingResult through the action parameter. If you don't set the BindingResult as a parameter, Spring will throw the exception and never call the controller method. The BindingResult object gives you the power to decide what to do if there were binding errors. 
+You need to ask the controller to validate your bean using the @Valid annotation. You also need to get the BindingResult through the action parameter. If you don't set the BindingResult as a parameter, Spring will throw the exception and never call the controller method. The BindingResult object gives you the power to decide what to do if there were binding errors.
 
 **Important!** As soon as you put BindingResult as a parameter in your controller method, all validation is now your responsibility. Spring will validate and put all errors inside the result. It will assume that you are going to handle everything in the controller method that received the result.
 
@@ -80,7 +83,7 @@ public ModelAndView save(@Valid Person person, BindingResult bindingResults) {
 		mv.setViewName("edit");
 
 		mv.addObject("person", person);
-		
+
 		// Add errors to the Model so that they can be used in the view
 		mv.addObject("errors", bindingResults.getFieldErrors());
 
@@ -93,9 +96,9 @@ public ModelAndView save(@Valid Person person, BindingResult bindingResults) {
 		if (person.getId() == null) {
 			// Generate ID
 			person.setId(people.size() + 1);
-		} 
+		}
 		people.put(person.getId(), person);
-		
+
 		System.out.println("Person saved!");
 	}
 	return mv;
@@ -130,22 +133,22 @@ The easiest way to show the errors to the user is to loop through all of them an
 			</c:forEach>
 		</ul>
 	</c:if>
-	
+
 	<form action="save.do" method="post">
 		<input type="hidden" name="id" value="${person.id}" />
-		
+
 		<label for="firstName">First name:</label>
 		<input name="firstName" value="${person.firstName}" />
 		<br />
-		
+
 		<label for="lastName">Last name:</label>
 		<input name="lastName" value="${person.lastName}" />
 		<br />
-		
+
 		<label for="birthday">Birthday:</label>
 		<input name="birthday" value="<fmt:formatDate pattern="yyyy-MM-dd" value="${person.birthday}"/>" />
 		<br />
-		
+
 		<input type="submit" />
 	</form>
 </body>

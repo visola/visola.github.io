@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: web, mvc, java, servlets, jsp
+----------
 A while ago a friend of mine that is starting with web development in Java asked me what is the best way to write a web application in Java if you can't understand a framework like Spring or JSF or if you just don't want to use them? Well, this project is a simple example on how to get a MVC working with a database using a singleton that will generate a data source for you.
 
 As usual the code is in my [github repository](https://github.com/visola/) under `simple-web-mvc`.
@@ -45,7 +48,7 @@ The `Database` class is a singleton that creates a connection pool with a H2 in 
 Connection conn = null;
 try {
 	conn = Database.getConnection();
-			
+
 	// Use database connection here
 
 } catch (SQLException sqle) {

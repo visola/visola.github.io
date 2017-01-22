@@ -1,3 +1,6 @@
+author: Vinicius Isola
+tags: javascript, backbone, requirejs
+----------
 A Backbone app has three main pieces: routes, models/collections and views. In this part of the two posts I'm going to explain how to setup and use Backbone in a single page application while separating your code in a way that it will be simple to maintain and add new features.
 
 The first part of this tutorial lives [here](http://wp.me/p2iway-6p). The code for this post lives in my Blog's GitHub repository under [require-js-backbone](https://github.com/visola/bearprogrammer-examples/tree/master/require-js-backbone).
@@ -96,7 +99,7 @@ In an app that uses RequireJS, the view is a module and goes into its own file i
 Like every RequireJS module it starts with a call to the define function. Whatever is returned by the callback function will be stored as the module that was defined. That means that the contacts view definition needs to return a `Backbone.View` class (or a subclass of it). The following is the code inside `js/view/contact/List.js` file:
 
 ```javascript
-define(['backbone', 'router', 'tpl!template/contact/list.html', 'collection/Contacts'], 
+define(['backbone', 'router', 'tpl!template/contact/list.html', 'collection/Contacts'],
     function (Backbone, router, ListContactsTemplate, Contacts) {
 
   return Backbone.View.extend({
