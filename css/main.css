@@ -85,6 +85,12 @@ h1 > a, h2 > a, h3 > a, h4 > a, h5 > a, h6 > a {
   width: 24px;
 }
 
+iframe {
+  display: block;
+  margin: 0 auto;
+  width: 640px;
+}
+
 .older {
   margin-bottom: 50px;
   text-align: center;
