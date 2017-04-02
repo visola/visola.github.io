@@ -35,7 +35,7 @@ function addPost (filename, path) {
       return;
     }
 
-    split = rawContent.toString().split(/-{5,}/);
+    split = rawContent.toString('utf8').split(/-{5,}/);
 
     if (split.length > 1) {
       metadata = yaml.load(split[0]);
