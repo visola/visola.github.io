@@ -3,7 +3,7 @@ tags: javascript, backbone, requirejs
 ----------
 A Backbone app has three main pieces: routes, models/collections and views. In this part of the two posts I'm going to explain how to setup and use Backbone in a single page application while separating your code in a way that it will be simple to maintain and add new features.
 
-The first part of this tutorial lives [here](http://wp.me/p2iway-6p). The code for this post lives in my Blog's GitHub repository under [require-js-backbone](https://github.com/visola/bearprogrammer-examples/tree/master/require-js-backbone).
+The first part of this tutorial lives [here](/2015/11/04/requirejs-and-backbone-on-a-single-page-application-part-1). The code for this post lives in my Blog's GitHub repository under [require-js-backbone](https://github.com/visola/bearprogrammer-examples/tree/master/require-js-backbone).
 
 <!-- more -->
 
