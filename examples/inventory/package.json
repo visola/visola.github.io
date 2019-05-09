@@ -1,0 +1,15 @@
+{
+  "name": "Inventory",
+  "version": "1.0.0",
+  "scripts": {
+    "verify": "eslint *.js **/*.js"
+  },
+  "dependencies": {
+    "express": "^4.15.2",
+    "moment": "^2.18.1",
+    "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0"
+  }
+}
