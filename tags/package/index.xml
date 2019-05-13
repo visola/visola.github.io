@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>package on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/package/</link>
+    <description>Recent content in package on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 01 Apr 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/package/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>npm, packages and modules</title>
+      <link>http://example.org/posts/2017-04-01-npm-packages-and-modules/</link>
+      <pubDate>Sat, 01 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2017-04-01-npm-packages-and-modules/</guid>
+      <description>Node.js is a powerful Javascript runtime that can be used to build general purpose applications. npm extends Node.js capabilities with packages built by 3rd parties. These packages provide a variety of functionalities that you might need when building your application.
+Let&amp;rsquo;s learn a little bit more about npm is and how it can help us.
+ -- packages and modules Before diving into npm lets first understand what are packages and modules.</description>
+    </item>
+    
+  </channel>
+</rss>

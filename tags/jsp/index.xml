@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jsp on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/jsp/</link>
+    <description>Recent content in jsp on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 05 Aug 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/jsp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Simple web MVC with servlets and JSP</title>
+      <link>http://example.org/posts/2012-08-05-simple-web-mvc-with-servlets-and-jsp/</link>
+      <pubDate>Sun, 05 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-08-05-simple-web-mvc-with-servlets-and-jsp/</guid>
+      <description>A while ago a friend of mine that is starting with web development in Java asked me what is the best way to write a web application in Java if you can&amp;rsquo;t understand a framework like Spring or JSF or if you just don&amp;rsquo;t want to use them? Well, this project is a simple example on how to get a MVC working with a database using a singleton that will generate a data source for you.</description>
+    </item>
+    
+  </channel>
+</rss>

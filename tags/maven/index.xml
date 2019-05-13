@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>maven on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/maven/</link>
+    <description>Recent content in maven on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Dec 2013 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/maven/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Build tools for Java</title>
+      <link>http://example.org/posts/2013-12-17-build-tools-for-java/</link>
+      <pubDate>Tue, 17 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2013-12-17-build-tools-for-java/</guid>
+      <description>More than a year ago I wrote a post about how I started to use Maven to build my Java applications and how much I loved it! Things changed a lot since then and I, like many others, am moving my projects to Gradle. In this post - and a few more to come - I&amp;rsquo;ll be talking about build tools for Java and make some comparisons and explain why I moved to Gradle.</description>
+    </item>
+    
+    <item>
+      <title>OSGi Maven and Servlet</title>
+      <link>http://example.org/posts/2012-07-31-osgi-maven-and-servlet/</link>
+      <pubDate>Tue, 31 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-31-osgi-maven-and-servlet/</guid>
+      <description>I tried a few times before to start developing using OSGi but never had a chance to work with it in the real life so it&amp;rsquo;s hard to get all the concepts to stick in my head. This post is my way to change that, meaning that I&amp;rsquo;m trying to learn OSGi deeper and start getting things done using this platform.
+The first thing I wanted to do is to have a good experience with tooling and get Maven to work for me, not against me.</description>
+    </item>
+    
+    <item>
+      <title>Beginning with Maven and M2</title>
+      <link>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</link>
+      <pubDate>Sun, 03 Jun 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</guid>
+      <description>Apache Maven, in my opinion, is one of the most controversial tools around. From my experience, there are three kinds of developers today: those that never heard about Maven, those that hate it and those that can&amp;rsquo;t live without it. For a long time I was in the second group and I just recently turned to the third one, and I&amp;rsquo;m slowly dragging all my fellow programmers with me!</description>
+    </item>
+    
+  </channel>
+</rss>

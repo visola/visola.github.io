@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tools on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/tools/</link>
+    <description>Recent content in tools on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 17 Dec 2013 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/tools/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Build tools for Java</title>
+      <link>http://example.org/posts/2013-12-17-build-tools-for-java/</link>
+      <pubDate>Tue, 17 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2013-12-17-build-tools-for-java/</guid>
+      <description>More than a year ago I wrote a post about how I started to use Maven to build my Java applications and how much I loved it! Things changed a lot since then and I, like many others, am moving my projects to Gradle. In this post - and a few more to come - I&amp;rsquo;ll be talking about build tools for Java and make some comparisons and explain why I moved to Gradle.</description>
+    </item>
+    
+  </channel>
+</rss>

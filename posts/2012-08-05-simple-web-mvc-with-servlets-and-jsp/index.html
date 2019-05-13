@@ -1,0 +1,120 @@
+<html>
+<head>
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Vinny's Blog">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,700|Droid+Sans+Mono" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <title>Vinnie&#39;s Blog</title>
+</head>
+<body>
+    <div id="header">
+        <a href="/"><img class="me" src="/img/me.jpg" /></a>
+        <h2><a href="/">Vinnie's Blog</a></h2>
+        <section class="links">
+            <a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png" /></a>
+            <a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png" /></a>
+            <a href="https://github.com/visola/"><img src="/img/github.png" /></a>
+            <a href="/index.xml"><img src="/img/rss.png" /></a>
+        </section>
+    </div>
+    <div id="content">
+        
+  <h1>Simple web MVC with servlets and JSP</h1>
+  <p class="published">August 5, 2012 by Vinicius Isola</p>
+  
+
+<p>A while ago a friend of mine that is starting with web development in Java asked me what is the best way to write a web application in Java if you can&rsquo;t understand a framework like Spring or JSF or if you just don&rsquo;t want to use them? Well, this project is a simple example on how to get a MVC working with a database using a singleton that will generate a data source for you.</p>
+
+<p>As usual the code is in my <a href="https://github.com/visola/">github repository</a> under <code>simple-web-mvc</code>.</p>
+
+<!-- more -->
+
+<h2 id="mvc-with-servlets-and-jsps">MVC with Servlets and JSPs</h2>
+
+<p>Scriptles were very popular when JSPs first arrived and because of the easy to use and fast development model, they were used to do everything. MVC using JSPs is possible but scriptlets make your pages very hard to read and when you start mixing Javascript, CSS, HTML and Java all in one file it&rsquo;s easy to get to the thousand lines, meaning that the output will normally be a long HTML file that will take a lot of time to load, render and execute the javascript code - not to mention the readability problem.</p>
+
+<p>To avoid that and separate Java code from the HTML normally a servlet is used. The servlet do all the heavy lifting - load model data, process and modify it and then save it back - and then add it to the request as attributes and dispatch it to a JSP file that will use <a href="http://docs.oracle.com/javaee/1.4/tutorial/doc/JSPIntro7.html">expression language</a> and taglibs to generate the HTML code that will be rendered on the client side.</p>
+
+<p>Some people even argue that that makes it easy enough for designers to generate the HTML in those fancy design tools like Dreamweaver or Illustrator but I really don&rsquo;t like automatically generated HTML because the tools still aren&rsquo;t good enough. And designers aren&rsquo;t programmers, most of them don&rsquo;t like to do be responsible for the HTML and they aren&rsquo;t paid to do that - some people think that is part of their job. When I work with a designer, I prefer to get a JPEG file or a PNG with all the specification and write my own HTML/CSS/Javascript.</p>
+
+<p>But back to the MVC stuff. The following is an illustration that shows how the request/response flow is handled in this project. After the illustration is a detailed step-by-step description of each number in the image:</p>
+
+<p><img src="/img/blog/simple-web-mvc-01.png" alt="Simple web MVC architecture" /></p>
+
+<ol>
+<li>Tomcat receives the request and passes it to the <code>BaseServlet</code>, that is an abstract servlet class that all servlets should extend to get basic request/response functionality</li>
+<li><code>BaseServlet</code> calls the <code>execute</code> method of the subclass</li>
+<li>The execute method is where the real action happens and all exceptions should not be handled (will be explained later). Here is where the servlet access the data access layer</li>
+<li>Data access layer handles all conversation with the database and passes only objects back to the servlet</li>
+<li>After loading/updating the data subclasses of <code>BaseServlet</code> only need to return a string that says how the response should be handled. The dispatch method will handle the forwarding to a JSP or a redirect instruction back to the browser. If an exception is thrown by the <code>execute</code> method it will be handled and redirected to the <code>error.jsp</code> page</li>
+</ol>
+
+<p>This application is using the new (not so new anymore) version 3 of the servlet specification so we don&rsquo;t need to declare and map the servlets in the <code>web.xml</code> file. We can use annotations like the following example from the <code>SaveContactServlet</code>:</p>
+
+<pre><code class="language-java">@WebServlet(&quot;/contact/save.html&quot;)
+public class SaveContactServlet extends BaseServlet {
+  ...
+}
+</code></pre>
+
+<p>One thing that I like to do - that I learned when I started working with the Spring Framework - is to put the JSP files in the <code>/WEB-INF</code> folder, so that access to them is controlled through servlet.</p>
+
+<h2 id="data-access">Data Access</h2>
+
+<p>Now that we have the C(ontroller) and V(iew) we need the M(odel). To make the application as simple as possible, only one entity will be used: Contact. So let&rsquo;s build a contact manager where you can store many contacts with name and email.</p>
+
+<p>To access the data we&rsquo;ll use a <a href="http://en.wikipedia.org/wiki/Data_access_object">Data Access Object</a>. Normally DAOs are interfaces that have an implementation for a specific data storage type. In this case, to keep things simple I&rsquo;m using a class that access a <a href="http://en.wikipedia.org/wiki/Singleton_pattern">Singleton</a> that creates connections from a <a href="http://commons.apache.org/dbcp/">Commons DBCP</a> <code>DataSource</code>.</p>
+
+<p>The <code>Database</code> class is a singleton that creates a connection pool with a H2 in memory database. This connection pool will be shared by all application and the only way to get a connection in this application is to follow the pattern:</p>
+
+<pre><code class="language-java">Connection conn = null;
+try {
+	conn = Database.getConnection();
+
+	// Use database connection here
+
+} catch (SQLException sqle) {
+	// Handle exception or throw a new one here
+} finally {
+	// Don't forget to close the connection
+	// This will return the connection to the pool
+	Database.closeConnection(conn);
+}
+</code></pre>
+
+<p>To separate the data access layer better, instead of throwing a <em>SQLException</em> we encapsulate any exception in a <code>DataAccessException</code> that should be handled by the upper layers (controllers).</p>
+
+<p>Normally we have one <em>Data Access Object</em> for each model class and in this case we have only one model class that is <code>Contact</code> so we only need the <code>ContactDAO</code> that has only three methods:</p>
+
+<ul>
+<li><code>findAll()</code> - that will return all contacts in the database</li>
+<li><code>findOne(Integer)</code> - that will search for a contact in the database and throws an exception if it doesn&rsquo;t find any</li>
+<li><code>save(Contact)</code> - that saves a new contact if it doesn&rsquo;t exist or update a new one if already in the database</li>
+</ul>
+
+<h2 id="servlets">Servlets</h2>
+
+<p>The application contains one base servlet that, as explained above, handles all the dispatching and error handling. It also contains three sub-classes of the base servlet that are responsible for the actual feature that is contact handling: <code>AllContactsServlet</code>, <code>EditContactServlet</code> and <code>SaveContactServlet</code>.</p>
+
+<p>The first two servlets has a JSP file for each. The <code>AllContactsServlet</code> loads all contacts from the database and the <code>EditContactServlet</code> is used to add a new contact or to edit an existing one and both actions use the same JSP file.</p>
+
+<p>The <code>SaveContactServlet</code> is a bit different because it doesn&rsquo;t have a JSP file. It is the action that the form in <code>contact/edit.jsp</code> page points to. It is responsible to save the contact and it uses the <a href="http://en.wikipedia.org/wiki/Post/Redirect/Get">Post/Redirect/Get</a> pattern to avoid duplicating the record in case the user refreshes the page.</p>
+
+<h2 id="one-last-detail">One last detail</h2>
+
+<p>There&rsquo;s a listener in the application: <code>CreateDatabaseListener</code>. This listener exists only because I didn&rsquo;t want to use a database server or file, so I need to recreate the database every time the application loads because it is a in memory database and it will be destroyed as soon as the application finishes.</p>
+
+<h2 id="result">Result</h2>
+
+<p>The following is a screenshot of the all contacts page:</p>
+
+<p><img src="/img/blog/simple-web-mvc-all-contacts.png" alt="Screenshot 1" /></p>
+
+<p>And the next one is the add contact page:</p>
+
+<p><img src="/img/blog/simple-web-mvc-add-contact.png" alt="Screenshot 2" /></p>
+
+
+    </div>
+</body>
+</html>

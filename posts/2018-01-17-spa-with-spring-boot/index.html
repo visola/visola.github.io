@@ -1,0 +1,109 @@
+<html>
+<head>
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Vinny's Blog">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,700|Droid+Sans+Mono" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <title>Vinnie&#39;s Blog</title>
+</head>
+<body>
+    <div id="header">
+        <a href="/"><img class="me" src="/img/me.jpg" /></a>
+        <h2><a href="/">Vinnie's Blog</a></h2>
+        <section class="links">
+            <a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png" /></a>
+            <a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png" /></a>
+            <a href="https://github.com/visola/"><img src="/img/github.png" /></a>
+            <a href="/index.xml"><img src="/img/rss.png" /></a>
+        </section>
+    </div>
+    <div id="content">
+        
+  <h1>SPA with Spring Boot</h1>
+  <p class="published">January 17, 2018 by Vinicius Isola</p>
+  
+
+<p>Single page applications are becoming more and more common these days. If you work with Spring Boot and want to build your frontend using this architecture, you have two options: build the frontend on a separate repository and serve it using some HTTP server or serve your files from your Java application.</p>
+
+<p>This post explains the basic configuration needed so that you can manage routing on the frontend and still serve your static files from your Java/Spring application.</p>
+
+<!-- more -->
+
+<p>The sample code for this application lives <a href="https://github.com/visola/bearprogrammer-examples/tree/master/spa-with-spring-boot">here</a>.</p>
+
+<h2 id="api-base">API Base</h2>
+
+<p>The first step you need to do is decide where your APIs will live and settle on a base path for them. I normally just use <code>api/v1</code> as the base path but use a variable in <code>application.yml</code> to get it.</p>
+
+<p>Inside <code>src/main/resources/applcation.yml</code> I just set:</p>
+
+<pre><code class="language-yml">api.base.path: /api/v1
+</code></pre>
+
+<p>And then, in my controllers, I always use a relative path passing in that variable as the base:</p>
+
+<pre><code>@RequestMapping(&quot;${api.base.path}/messages&quot;)
+@RestController
+public class HelloController {
+
+    @ResponseBody
+    @RequestMapping(&quot;/{name}&quot;)
+    public HelloVO getMessage(@PathVariable String name) {
+        return new HelloVO(name);
+    }
+
+}
+</code></pre>
+
+<h2 id="always-redirect-to-index-html">Always redirect to <code>index.html</code></h2>
+
+<p>In a single page application, routing is normally handled by code in the frontend. If you&rsquo;re using Backbone, React, Angular, all provide some kind of routing framework and they all expect that the main javascript entry point will be loaded, doesn&rsquo;t matter what route you load your app from.</p>
+
+<p>Because of that, when your application is loaded from <code>/</code> or from <code>/some/path</code>, you need to load your <code>index.html</code>, call the router and decide what page the user should see. To make that work in Spring, you need to add a <code>ResourceResolver</code> that will always load the root page as long as you&rsquo;re not asking for a resource (stylesheet, image, font, etc.) or making an API call.</p>
+
+<p>This is how that code looks like (in <code>src/main/java/org/visola/springbootspa/config/WebConfiguration.java</code>):</p>
+
+<pre><code class="language-java">@Configuration
+public class WebConfiguration extends WebMvcConfigurerAdapter {
+  ...
+
+  @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+      // All resources go to where they should go
+      registry
+        .addResourceHandler(&quot;/**/*.css&quot;, &quot;/**/*.html&quot;, &quot;/**/*.js&quot;, &quot;/**/*.jsx&quot;, &quot;/**/*.png&quot;, &quot;/**/*.ttf&quot;, &quot;/**/*.woff&quot;, &quot;/**/*.woff2&quot;)
+        .setCachePeriod(0)
+        .addResourceLocations(&quot;classpath:/static/&quot;);
+
+      registry.addResourceHandler(&quot;/&quot;, &quot;/**&quot;)
+        .setCachePeriod(0)
+        .addResourceLocations(&quot;classpath:/static/index.html&quot;)
+        .resourceChain(true)
+        .addResolver(new PathResourceResolver() {
+          @Override
+          protected Resource getResource(String resourcePath, Resource location) throws IOException {
+            if (resourcePath.startsWith(baseApiPath) || resourcePath.startsWith(baseApiPath.substring(1))) {
+              return null;
+            }
+
+            return location.exists() &amp;&amp; location.isReadable() ? location : null;
+          }
+        });
+    }
+
+}
+</code></pre>
+
+<p>There are two important things happening here:</p>
+
+<ol>
+<li>The first resource handler will match any font, stylesheet or image in the coming from the <code>static</code> folder from the classpath. Those we definitely don&rsquo;t want to redirect to <code>index.html</code></li>
+<li>The second resource handler matches everything else that is not mapped to a controller or something else using <code>@RequestMapping</code>. This resource handler will check if the path was an API call and it fails if it was (because we want to return 404 and not 200 with <code>index.html</code> as the body for API path typos).</li>
+</ol>
+
+<p>One detail here is that I&rsquo;m setting the cache period to zero, which means that it will never cache nor send cache headers for these resources. If you&rsquo;re using caching and generating some type of bundle version like using the <code>chunkhash</code> from <a href="https://webpack.js.org/guides/caching/">Webpack caching</a>, then you should set that up to a very long time for your first handler, probably <code>Integer.MAX_VALUE</code>. That way your resources will be cached forever and the browser will never reload them, but it will automatically pick a new version from <code>index.html</code>.</p>
+
+
+    </div>
+</body>
+</html>

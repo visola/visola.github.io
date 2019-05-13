@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>security on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/security/</link>
+    <description>Recent content in security on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 20 Jul 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Customizing Spring Security</title>
+      <link>http://example.org/posts/2012-07-20-customizing-spring-security/</link>
+      <pubDate>Fri, 20 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-20-customizing-spring-security/</guid>
+      <description>Spring Security is a very powerful and customizable security framework for JEE applications. This post will show how to integrate it seamlessly with your application setting up a custom login and logout.
+You&amp;rsquo;ll also learn how to add a custom filter with very specific behavior and how to integrate with Spring Data so that your users can be loaded from a repository and avoid all the hassle of dealing with JDBC or Hibernate.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>eclipse on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/eclipse/</link>
+    <description>Recent content in eclipse on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 03 Jun 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/eclipse/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Beginning with Maven and M2</title>
+      <link>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</link>
+      <pubDate>Sun, 03 Jun 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</guid>
+      <description>Apache Maven, in my opinion, is one of the most controversial tools around. From my experience, there are three kinds of developers today: those that never heard about Maven, those that hate it and those that can&amp;rsquo;t live without it. For a long time I was in the second group and I just recently turned to the third one, and I&amp;rsquo;m slowly dragging all my fellow programmers with me!</description>
+    </item>
+    
+  </channel>
+</rss>

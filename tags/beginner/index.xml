@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>beginner on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/beginner/</link>
+    <description>Recent content in beginner on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 01 Apr 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/beginner/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>npm, packages and modules</title>
+      <link>http://example.org/posts/2017-04-01-npm-packages-and-modules/</link>
+      <pubDate>Sat, 01 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2017-04-01-npm-packages-and-modules/</guid>
+      <description>Node.js is a powerful Javascript runtime that can be used to build general purpose applications. npm extends Node.js capabilities with packages built by 3rd parties. These packages provide a variety of functionalities that you might need when building your application.
+Let&amp;rsquo;s learn a little bit more about npm is and how it can help us.
+ -- packages and modules Before diving into npm lets first understand what are packages and modules.</description>
+    </item>
+    
+    <item>
+      <title>What is node.js</title>
+      <link>http://example.org/posts/2017-01-15-what-is-node.js/</link>
+      <pubDate>Sun, 15 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2017-01-15-what-is-node.js/</guid>
+      <description>Node.js is a runtime environment that can be used to build applications using the Javascript language outside the browser. It runs on top of the V8 engine, which is the engine that runs inside the Chromium and Chrome browsers.
+Let&amp;rsquo;s learn more details about what all of this means.
+ Piece by Piece V8 is an engine that interpret Javascript code. That means that you give it some Javascript text and it will execute it.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,157 @@
+<html>
+<head>
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Vinny's Blog">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,700|Droid+Sans+Mono" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <title>Vinnie&#39;s Blog</title>
+</head>
+<body>
+    <div id="header">
+        <a href="/"><img class="me" src="/img/me.jpg" /></a>
+        <h2><a href="/">Vinnie's Blog</a></h2>
+        <section class="links">
+            <a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png" /></a>
+            <a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png" /></a>
+            <a href="https://github.com/visola/"><img src="/img/github.png" /></a>
+            <a href="/index.xml"><img src="/img/rss.png" /></a>
+        </section>
+    </div>
+    <div id="content">
+        
+
+  
+    <article>
+      <h2><a href="/posts/2014-09-03-testing-a-web-application-with-gretty-cucumber-and-selenium/">Testing a web application with Gretty, Cucumber and Selenium</a></h2>
+      <p class="published">September 3, 2014 by Vinicius Isola</p>
+      The code used in this post is a complete web application built with Spring WebMVC, Spring Data and Spring Security. It contains a lot more than what is explained here and I hope to come back to it in later posts. The code can be found in my Github repository.
+For this post I&rsquo;ll be focusing on how you can test a web application using Cucumber and Selenium. I&rsquo;ll be using the Gretty plugin to start a web container during the build.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2014-05-18-building-with-gradle/">Building with Gradle</a></h2>
+      <p class="published">May 18, 2014 by Vinicius Isola</p>
+      Gradle is a build system that was build from the lessons learned from Ant and Maven. Similarly with Ant, where you have a XML namespace to write build scripts, Gradle is a DSL on top of Groovy that helps you write build scripts. But it goes further with many plugins and conventions (like Maven) that make it possible to get a build up and running with just a few lines of Groovy.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2014-03-22-building-with-ant/">Building with Ant</a></h2>
+      <p class="published">March 22, 2014 by Vinicius Isola</p>
+      Ant has been around for a while now (first released in 2000) and it can be compared with a scripting language written in XML. XML tags are translated to Java objects and executed calling methods in the objects created. The following image illustrates the relationship between the XML and the Java objects:
+A project built with Ant begins with a build.xml file where you describe all targets. A target is a set of tasks and can depend on other targets.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2013-12-17-build-tools-for-java/">Build tools for Java</a></h2>
+      <p class="published">December 17, 2013 by Vinicius Isola</p>
+      More than a year ago I wrote a post about how I started to use Maven to build my Java applications and how much I loved it! Things changed a lot since then and I, like many others, am moving my projects to Gradle. In this post - and a few more to come - I&rsquo;ll be talking about build tools for Java and make some comparisons and explain why I moved to Gradle.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2012-08-05-simple-web-mvc-with-servlets-and-jsp/">Simple web MVC with servlets and JSP</a></h2>
+      <p class="published">August 5, 2012 by Vinicius Isola</p>
+      A while ago a friend of mine that is starting with web development in Java asked me what is the best way to write a web application in Java if you can&rsquo;t understand a framework like Spring or JSF or if you just don&rsquo;t want to use them? Well, this project is a simple example on how to get a MVC working with a database using a singleton that will generate a data source for you.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2012-07-31-osgi-maven-and-servlet/">OSGi Maven and Servlet</a></h2>
+      <p class="published">July 31, 2012 by Vinicius Isola</p>
+      I tried a few times before to start developing using OSGi but never had a chance to work with it in the real life so it&rsquo;s hard to get all the concepts to stick in my head. This post is my way to change that, meaning that I&rsquo;m trying to learn OSGi deeper and start getting things done using this platform.
+The first thing I wanted to do is to have a good experience with tooling and get Maven to work for me, not against me.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2012-07-22-simple-caching-with-spring/">Simple Caching with Spring</a></h2>
+      <p class="published">July 22, 2012 by Vinicius Isola</p>
+      This week an old friend contacted me because he was having memory problems in one of his applications. The problem was very simple: for each user logged in, all application menus and part of the list/combo values were being added to the user session (including some images). That was used to makes things faster, to avoid going to the database multiple times and loading the data all over again.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2012-07-20-customizing-spring-security/">Customizing Spring Security</a></h2>
+      <p class="published">July 20, 2012 by Vinicius Isola</p>
+      Spring Security is a very powerful and customizable security framework for JEE applications. This post will show how to integrate it seamlessly with your application setting up a custom login and logout.
+You&rsquo;ll also learn how to add a custom filter with very specific behavior and how to integrate with Spring Data so that your users can be loaded from a repository and avoid all the hassle of dealing with JDBC or Hibernate.
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2012-06-03-beginning-with-maven-and-m2/">Beginning with Maven and M2</a></h2>
+      <p class="published">June 3, 2012 by Vinicius Isola</p>
+      Apache Maven, in my opinion, is one of the most controversial tools around. From my experience, there are three kinds of developers today: those that never heard about Maven, those that hate it and those that can&rsquo;t live without it. For a long time I was in the second group and I just recently turned to the third one, and I&rsquo;m slowly dragging all my fellow programmers with me!
+    </article>
+  
+
+  
+    <article>
+      <h2><a href="/posts/2012-04-14-bean-validation-jsr-303-and-spring-mvc/">Bean Validation (JSR-303) and Spring MVC</a></h2>
+      <p class="published">April 14, 2012 by Vinicius Isola</p>
+      The code for this example can be found at the blog repository in github.
+Validation in web applications normally spread through many lines of code in the client side and in the server side. JSR-303, or Bean Validation, is a standard developed to be part of JPA. It&rsquo;s a simple and generic way to annotate your entities with specific validation rules and have them validated by some validation engine.
+    </article>
+  
+
+
+
+<ul class="pagination">
+    
+    <li class="page-item">
+        <a href="/tags/java/" class="page-link" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
+    </li>
+    
+    <li class="page-item disabled">
+    <a href="" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+    </li>
+    
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item active"><a class="page-link" href="/tags/java/">1</a></li>
+    
+    
+    
+    
+    
+    
+        
+        
+    
+    
+    <li class="page-item"><a class="page-link" href="/tags/java/page/2/">2</a></li>
+    
+    
+    <li class="page-item">
+    <a href="/tags/java/page/2/" class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+    </li>
+    
+    <li class="page-item">
+        <a href="/tags/java/page/2/" class="page-link" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
+    </li>
+    
+</ul>
+
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>model on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/model/</link>
+    <description>Recent content in model on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 11 Apr 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/model/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>What is and how to use @ModelAttribute</title>
+      <link>http://example.org/posts/2012-04-11-what-is-and-how-to-use-modelattribute/</link>
+      <pubDate>Wed, 11 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-04-11-what-is-and-how-to-use-modelattribute/</guid>
+      <description>You can get the code for this post in the blog repository in github.
+Spring MVC is one of the easiest and most powerful MVC framework to build web applications in Java. With all the features that it has available it is impossible to know everything. But in most cases, when you ask the question: &amp;ldquo;Can Spring MVC do [put something complex and unexpected here]?&amp;rdquo; the answer is yes. And when it can&amp;rsquo;t, the answer is: it has a place for you to hook your code in and do whatever you need.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>java on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/java/</link>
+    <description>Recent content in java on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Sep 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Testing a web application with Gretty, Cucumber and Selenium</title>
+      <link>http://example.org/posts/2014-09-03-testing-a-web-application-with-gretty-cucumber-and-selenium/</link>
+      <pubDate>Wed, 03 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2014-09-03-testing-a-web-application-with-gretty-cucumber-and-selenium/</guid>
+      <description>The code used in this post is a complete web application built with Spring WebMVC, Spring Data and Spring Security. It contains a lot more than what is explained here and I hope to come back to it in later posts. The code can be found in my Github repository.
+For this post I&amp;rsquo;ll be focusing on how you can test a web application using Cucumber and Selenium. I&amp;rsquo;ll be using the Gretty plugin to start a web container during the build.</description>
+    </item>
+    
+    <item>
+      <title>Building with Gradle</title>
+      <link>http://example.org/posts/2014-05-18-building-with-gradle/</link>
+      <pubDate>Sun, 18 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2014-05-18-building-with-gradle/</guid>
+      <description>Gradle is a build system that was build from the lessons learned from Ant and Maven. Similarly with Ant, where you have a XML namespace to write build scripts, Gradle is a DSL on top of Groovy that helps you write build scripts. But it goes further with many plugins and conventions (like Maven) that make it possible to get a build up and running with just a few lines of Groovy.</description>
+    </item>
+    
+    <item>
+      <title>Building with Ant</title>
+      <link>http://example.org/posts/2014-03-22-building-with-ant/</link>
+      <pubDate>Sat, 22 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2014-03-22-building-with-ant/</guid>
+      <description>Ant has been around for a while now (first released in 2000) and it can be compared with a scripting language written in XML. XML tags are translated to Java objects and executed calling methods in the objects created. The following image illustrates the relationship between the XML and the Java objects:
+A project built with Ant begins with a build.xml file where you describe all targets. A target is a set of tasks and can depend on other targets.</description>
+    </item>
+    
+    <item>
+      <title>Build tools for Java</title>
+      <link>http://example.org/posts/2013-12-17-build-tools-for-java/</link>
+      <pubDate>Tue, 17 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2013-12-17-build-tools-for-java/</guid>
+      <description>More than a year ago I wrote a post about how I started to use Maven to build my Java applications and how much I loved it! Things changed a lot since then and I, like many others, am moving my projects to Gradle. In this post - and a few more to come - I&amp;rsquo;ll be talking about build tools for Java and make some comparisons and explain why I moved to Gradle.</description>
+    </item>
+    
+    <item>
+      <title>Simple web MVC with servlets and JSP</title>
+      <link>http://example.org/posts/2012-08-05-simple-web-mvc-with-servlets-and-jsp/</link>
+      <pubDate>Sun, 05 Aug 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-08-05-simple-web-mvc-with-servlets-and-jsp/</guid>
+      <description>A while ago a friend of mine that is starting with web development in Java asked me what is the best way to write a web application in Java if you can&amp;rsquo;t understand a framework like Spring or JSF or if you just don&amp;rsquo;t want to use them? Well, this project is a simple example on how to get a MVC working with a database using a singleton that will generate a data source for you.</description>
+    </item>
+    
+    <item>
+      <title>OSGi Maven and Servlet</title>
+      <link>http://example.org/posts/2012-07-31-osgi-maven-and-servlet/</link>
+      <pubDate>Tue, 31 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-31-osgi-maven-and-servlet/</guid>
+      <description>I tried a few times before to start developing using OSGi but never had a chance to work with it in the real life so it&amp;rsquo;s hard to get all the concepts to stick in my head. This post is my way to change that, meaning that I&amp;rsquo;m trying to learn OSGi deeper and start getting things done using this platform.
+The first thing I wanted to do is to have a good experience with tooling and get Maven to work for me, not against me.</description>
+    </item>
+    
+    <item>
+      <title>Simple Caching with Spring</title>
+      <link>http://example.org/posts/2012-07-22-simple-caching-with-spring/</link>
+      <pubDate>Sun, 22 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-22-simple-caching-with-spring/</guid>
+      <description>This week an old friend contacted me because he was having memory problems in one of his applications. The problem was very simple: for each user logged in, all application menus and part of the list/combo values were being added to the user session (including some images). That was used to makes things faster, to avoid going to the database multiple times and loading the data all over again.</description>
+    </item>
+    
+    <item>
+      <title>Customizing Spring Security</title>
+      <link>http://example.org/posts/2012-07-20-customizing-spring-security/</link>
+      <pubDate>Fri, 20 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-20-customizing-spring-security/</guid>
+      <description>Spring Security is a very powerful and customizable security framework for JEE applications. This post will show how to integrate it seamlessly with your application setting up a custom login and logout.
+You&amp;rsquo;ll also learn how to add a custom filter with very specific behavior and how to integrate with Spring Data so that your users can be loaded from a repository and avoid all the hassle of dealing with JDBC or Hibernate.</description>
+    </item>
+    
+    <item>
+      <title>Beginning with Maven and M2</title>
+      <link>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</link>
+      <pubDate>Sun, 03 Jun 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</guid>
+      <description>Apache Maven, in my opinion, is one of the most controversial tools around. From my experience, there are three kinds of developers today: those that never heard about Maven, those that hate it and those that can&amp;rsquo;t live without it. For a long time I was in the second group and I just recently turned to the third one, and I&amp;rsquo;m slowly dragging all my fellow programmers with me!</description>
+    </item>
+    
+    <item>
+      <title>Bean Validation (JSR-303) and Spring MVC</title>
+      <link>http://example.org/posts/2012-04-14-bean-validation-jsr-303-and-spring-mvc/</link>
+      <pubDate>Sat, 14 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-04-14-bean-validation-jsr-303-and-spring-mvc/</guid>
+      <description>The code for this example can be found at the blog repository in github.
+Validation in web applications normally spread through many lines of code in the client side and in the server side. JSR-303, or Bean Validation, is a standard developed to be part of JPA. It&amp;rsquo;s a simple and generic way to annotate your entities with specific validation rules and have them validated by some validation engine.</description>
+    </item>
+    
+    <item>
+      <title>What is and how to use @ModelAttribute</title>
+      <link>http://example.org/posts/2012-04-11-what-is-and-how-to-use-modelattribute/</link>
+      <pubDate>Wed, 11 Apr 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-04-11-what-is-and-how-to-use-modelattribute/</guid>
+      <description>You can get the code for this post in the blog repository in github.
+Spring MVC is one of the easiest and most powerful MVC framework to build web applications in Java. With all the features that it has available it is impossible to know everything. But in most cases, when you ask the question: &amp;ldquo;Can Spring MVC do [put something complex and unexpected here]?&amp;rdquo; the answer is yes. And when it can&amp;rsquo;t, the answer is: it has a place for you to hook your code in and do whatever you need.</description>
+    </item>
+    
+    <item>
+      <title>Simple Spring Data Example</title>
+      <link>http://example.org/posts/2012-03-26-simple-spring-data-example/</link>
+      <pubDate>Mon, 26 Mar 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-03-26-simple-spring-data-example/</guid>
+      <description>As my first post I&amp;rsquo;m going to do a very simple command line application that manages one entity called Person. The purpose of this example is to demonstrate how powerful the new Spring Data projects family are.
+Spring Data Spring Data is a family of projects that aims to create a repository layer. The idea is to have an abstract layer were all the dependencies will point to and different implementations with all kinds of data repositories (SQL and NoSQL), similiar to what JDBC did for SQL databases.</description>
+    </item>
+    
+  </channel>
+</rss>

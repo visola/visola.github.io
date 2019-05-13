@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>backbone on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/backbone/</link>
+    <description>Recent content in backbone on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 04 Nov 2015 22:00:00 -0400</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/backbone/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>RequireJS and Backbone on a Single Page Application - Part 2</title>
+      <link>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-2/</link>
+      <pubDate>Wed, 04 Nov 2015 22:00:00 -0400</pubDate>
+      
+      <guid>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-2/</guid>
+      <description>A Backbone app has three main pieces: routes, models/collections and views. In this part of the two posts I&amp;rsquo;m going to explain how to setup and use Backbone in a single page application while separating your code in a way that it will be simple to maintain and add new features.
+The first part of this tutorial lives here. The code for this post lives in my Blog&amp;rsquo;s GitHub repository under require-js-backbone.</description>
+    </item>
+    
+    <item>
+      <title>RequireJS and Backbone on a Single Page Application - Part 1</title>
+      <link>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-1/</link>
+      <pubDate>Wed, 04 Nov 2015 20:00:00 -0400</pubDate>
+      
+      <guid>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-1/</guid>
+      <description>Building single page applications isn&amp;rsquo;t easy. As the app grows and gets more complex your Javascript code gets harder to maintain and duplicate logic start spreading all over the place. Breaking your code in well defined and self contained small modules help to keep the complexity low and organize the logic in an encapsulated and predictable way. But to do that it means that you now need some kind of dependency management system in place.</description>
+    </item>
+    
+  </channel>
+</rss>
