@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cache on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/cache/</link>
+    <description>Recent content in cache on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 22 Jul 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/cache/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Simple Caching with Spring</title>
+      <link>http://example.org/posts/2012-07-22-simple-caching-with-spring/</link>
+      <pubDate>Sun, 22 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-22-simple-caching-with-spring/</guid>
+      <description>This week an old friend contacted me because he was having memory problems in one of his applications. The problem was very simple: for each user logged in, all application menus and part of the list/combo values were being added to the user session (including some images). That was used to makes things faster, to avoid going to the database multiple times and loading the data all over again.</description>
+    </item>
+    
+  </channel>
+</rss>

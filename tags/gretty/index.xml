@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>gretty on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/gretty/</link>
+    <description>Recent content in gretty on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 03 Sep 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/gretty/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Testing a web application with Gretty, Cucumber and Selenium</title>
+      <link>http://example.org/posts/2014-09-03-testing-a-web-application-with-gretty-cucumber-and-selenium/</link>
+      <pubDate>Wed, 03 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2014-09-03-testing-a-web-application-with-gretty-cucumber-and-selenium/</guid>
+      <description>The code used in this post is a complete web application built with Spring WebMVC, Spring Data and Spring Security. It contains a lot more than what is explained here and I hope to come back to it in later posts. The code can be found in my Github repository.
+For this post I&amp;rsquo;ll be focusing on how you can test a web application using Cucumber and Selenium. I&amp;rsquo;ll be using the Gretty plugin to start a web container during the build.</description>
+    </item>
+    
+  </channel>
+</rss>

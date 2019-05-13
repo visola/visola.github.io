@@ -1,0 +1,183 @@
+<html>
+<head>
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Vinny's Blog">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,700|Droid+Sans+Mono" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <title>Vinnie&#39;s Blog</title>
+</head>
+<body>
+    <div id="header">
+        <a href="/"><img class="me" src="/img/me.jpg" /></a>
+        <h2><a href="/">Vinnie's Blog</a></h2>
+        <section class="links">
+            <a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png" /></a>
+            <a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png" /></a>
+            <a href="https://github.com/visola/"><img src="/img/github.png" /></a>
+            <a href="/index.xml"><img src="/img/rss.png" /></a>
+        </section>
+    </div>
+    <div id="content">
+        
+  <h1>Bean Validation (JSR-303) and Spring MVC</h1>
+  <p class="published">April 14, 2012 by Vinicius Isola</p>
+  
+
+<p>The code for this example can be found at the <a href="https://github.com/visola/bearprogrammer-examples">blog repository in github</a>.</p>
+
+<p>Validation in web applications normally spread through many lines of code in the client side and in the server side. JSR-303, or Bean Validation, is a standard developed to be part of JPA. It&rsquo;s a simple and generic way to annotate your entities with specific validation rules and have them validated by some validation engine.</p>
+
+<p>Hibernate started with validation through annotations and JSR-303 was highly influenced by it (probably completely driven by it). Part of JEE 6, for those who are not using a complete JEE server (like Tomcat), the API can be found in one of Hibernate&rsquo;s artifact:</p>
+
+<pre><code class="language-xml">&lt;dependency&gt;
+	&lt;groupId&gt;org.hibernate&lt;/groupId&gt;
+	&lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;
+	&lt;version&gt;4.2.0.Final&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>Spring MVC 3 added full support for validation using JSR-303. So the same validation that you use in the persistence layer can also be used in your web layer, at least in the server side. This example will show a simple application that uses Bean Validation to validate a bean before saving it.</p>
+
+<!-- more -->
+
+<h2 id="the-example">The Example</h2>
+
+<p>This simple example does not use a persistence layer. All beans are stored in a TreeMap inside the controller. Only two JSP files are used, one to show all beans in memory and one that is used to edit an existing bean and also to create new ones.</p>
+
+<p>The validation occurs inside the controller and it&rsquo;s done automatically by Spring. The controller only checks if there are errors and redirect the user accordingly.</p>
+
+<p>The edit.jsp page will show the validation errors in a list, so the user can act and try to resend the form again.</p>
+
+<h2 id="step-1-add-the-validation">Step 1 - Add the validation</h2>
+
+<p>First thing you need to do is annotate your bean with the correct constraints. The following is the Person class code with the annotations:</p>
+
+<pre><code class="language-java">public class Person {
+
+	// This is going to be generated on the server-side
+	private Integer id;
+
+	@NotNull
+	@Past
+	private Date birthday;
+
+	@NotNull
+	@Size(min = 1, max = 50)
+	private String firstName;
+
+	@NotNull
+	@Size(min = 1, max = 50)
+	private String lastName;
+
+	// Getters and Setters
+
+}
+</code></pre>
+
+<p>In most cases the constraint annotations are very explicit and self-explanatory. You can find the documentation in <a href="http://docs.oracle.com/javaee/6/api/">JEE 6 API</a>, inside package <code>javax.validation</code>.</p>
+
+<h2 id="step-2-ask-spring-to-search-for-annotations">Step 2 - Ask Spring to search for annotations</h2>
+
+<p>Spring needs to know that you want to use JSR-303 validation. To do that, you need to add the following code to your Spring configuration file:</p>
+
+<pre><code class="language-xml">&lt;mvc:annotation-driven /&gt;
+</code></pre>
+
+<h2 id="step-3-set-the-bean-to-be-validated-and-handle-validation">Step 3 - Set the bean to be validated and handle validation</h2>
+
+<p>You need to ask the controller to validate your bean using the @Valid annotation. You also need to get the BindingResult through the action parameter. If you don&rsquo;t set the BindingResult as a parameter, Spring will throw the exception and never call the controller method. The BindingResult object gives you the power to decide what to do if there were binding errors.</p>
+
+<p><strong>Important!</strong> As soon as you put BindingResult as a parameter in your controller method, all validation is now your responsibility. Spring will validate and put all errors inside the result. It will assume that you are going to handle everything in the controller method that received the result.</p>
+
+<p>The following is the save method (that doesn&rsquo;t save, just add the bean to the TreeMap):</p>
+
+<pre><code class="language-java">@RequestMapping(&quot;/save&quot;)
+public ModelAndView save(@Valid Person person, BindingResult bindingResults) {
+
+	ModelAndView mv = new ModelAndView(&quot;redirect:all.do&quot;);
+
+	// Check for validation errors
+	if (bindingResults.hasErrors()) {
+		mv.setViewName(&quot;edit&quot;);
+
+		mv.addObject(&quot;person&quot;, person);
+
+		// Add errors to the Model so that they can be used in the view
+		mv.addObject(&quot;errors&quot;, bindingResults.getFieldErrors());
+
+		// Print the errors to the console
+		System.out.println(&quot;Validation errors:&quot;);
+		for (FieldError error : bindingResults.getFieldErrors()) {
+			System.out.println(error.getField() + &quot; - &quot; + error.getDefaultMessage());
+		}
+	} else {
+		if (person.getId() == null) {
+			// Generate ID
+			person.setId(people.size() + 1);
+		}
+		people.put(person.getId(), person);
+
+		System.out.println(&quot;Person saved!&quot;);
+	}
+	return mv;
+}
+</code></pre>
+
+<h2 id="step-4-show-the-errors-to-the-user">Step 4 - Show the errors to the user</h2>
+
+<p>The easiest way to show the errors to the user is to loop through all of them and print it in the edit.jsp, where the form is. That way the user can try to fix whatever was wrong and submit the form again. The following is the code for the edit.jsp page:</p>
+
+<pre><code class="language-html">&lt;%@ page language=&quot;java&quot; contentType=&quot;text/html; charset=UTF-8&quot; pageEncoding=&quot;UTF-8&quot;%&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/core&quot; prefix=&quot;c&quot; %&gt;
+&lt;%@ taglib uri=&quot;http://java.sun.com/jsp/jstl/fmt&quot; prefix=&quot;fmt&quot; %&gt;
+&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot; &quot;http://www.w3.org/TR/html4/loose.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+	&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+	&lt;title&gt;Edit Person&lt;/title&gt;
+	&lt;style&gt;
+		#errors {
+			color: red;
+		}
+	&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+	&lt;c:if test=&quot;${errors != null}&quot;&gt;
+		&lt;ul id=&quot;errors&quot;&gt;
+			&lt;c:forEach items=&quot;${errors}&quot; var=&quot;error&quot;&gt;
+				&lt;li&gt;${error.field}: ${error.defaultMessage}&lt;/li&gt;
+			&lt;/c:forEach&gt;
+		&lt;/ul&gt;
+	&lt;/c:if&gt;
+
+	&lt;form action=&quot;save.do&quot; method=&quot;post&quot;&gt;
+		&lt;input type=&quot;hidden&quot; name=&quot;id&quot; value=&quot;${person.id}&quot; /&gt;
+
+		&lt;label for=&quot;firstName&quot;&gt;First name:&lt;/label&gt;
+		&lt;input name=&quot;firstName&quot; value=&quot;${person.firstName}&quot; /&gt;
+		&lt;br /&gt;
+
+		&lt;label for=&quot;lastName&quot;&gt;Last name:&lt;/label&gt;
+		&lt;input name=&quot;lastName&quot; value=&quot;${person.lastName}&quot; /&gt;
+		&lt;br /&gt;
+
+		&lt;label for=&quot;birthday&quot;&gt;Birthday:&lt;/label&gt;
+		&lt;input name=&quot;birthday&quot; value=&quot;&lt;fmt:formatDate pattern=&quot;yyyy-MM-dd&quot; value=&quot;${person.birthday}&quot;/&gt;&quot; /&gt;
+		&lt;br /&gt;
+
+		&lt;input type=&quot;submit&quot; /&gt;
+	&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2 id="result">Result</h2>
+
+<p>If you go to the edit page and try to save a person with a date in the future, you would see the following error:</p>
+
+<p><img src="/img/blog/bean-validation-001.png" alt="Bean Validation - 001" /></p>
+
+
+    </div>
+</body>
+</html>

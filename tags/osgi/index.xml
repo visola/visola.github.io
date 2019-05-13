@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>osgi on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/osgi/</link>
+    <description>Recent content in osgi on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 31 Jul 2012 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/osgi/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>OSGi Maven and Servlet</title>
+      <link>http://example.org/posts/2012-07-31-osgi-maven-and-servlet/</link>
+      <pubDate>Tue, 31 Jul 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-07-31-osgi-maven-and-servlet/</guid>
+      <description>I tried a few times before to start developing using OSGi but never had a chance to work with it in the real life so it&amp;rsquo;s hard to get all the concepts to stick in my head. This post is my way to change that, meaning that I&amp;rsquo;m trying to learn OSGi deeper and start getting things done using this platform.
+The first thing I wanted to do is to have a good experience with tooling and get Maven to work for me, not against me.</description>
+    </item>
+    
+  </channel>
+</rss>

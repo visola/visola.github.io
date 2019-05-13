@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>build on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/build/</link>
+    <description>Recent content in build on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 18 May 2014 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/build/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Building with Gradle</title>
+      <link>http://example.org/posts/2014-05-18-building-with-gradle/</link>
+      <pubDate>Sun, 18 May 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2014-05-18-building-with-gradle/</guid>
+      <description>Gradle is a build system that was build from the lessons learned from Ant and Maven. Similarly with Ant, where you have a XML namespace to write build scripts, Gradle is a DSL on top of Groovy that helps you write build scripts. But it goes further with many plugins and conventions (like Maven) that make it possible to get a build up and running with just a few lines of Groovy.</description>
+    </item>
+    
+    <item>
+      <title>Building with Ant</title>
+      <link>http://example.org/posts/2014-03-22-building-with-ant/</link>
+      <pubDate>Sat, 22 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2014-03-22-building-with-ant/</guid>
+      <description>Ant has been around for a while now (first released in 2000) and it can be compared with a scripting language written in XML. XML tags are translated to Java objects and executed calling methods in the objects created. The following image illustrates the relationship between the XML and the Java objects:
+A project built with Ant begins with a build.xml file where you describe all targets. A target is a set of tasks and can depend on other targets.</description>
+    </item>
+    
+    <item>
+      <title>Build tools for Java</title>
+      <link>http://example.org/posts/2013-12-17-build-tools-for-java/</link>
+      <pubDate>Tue, 17 Dec 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2013-12-17-build-tools-for-java/</guid>
+      <description>More than a year ago I wrote a post about how I started to use Maven to build my Java applications and how much I loved it! Things changed a lot since then and I, like many others, am moving my projects to Gradle. In this post - and a few more to come - I&amp;rsquo;ll be talking about build tools for Java and make some comparisons and explain why I moved to Gradle.</description>
+    </item>
+    
+    <item>
+      <title>Beginning with Maven and M2</title>
+      <link>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</link>
+      <pubDate>Sun, 03 Jun 2012 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2012-06-03-beginning-with-maven-and-m2/</guid>
+      <description>Apache Maven, in my opinion, is one of the most controversial tools around. From my experience, there are three kinds of developers today: those that never heard about Maven, those that hate it and those that can&amp;rsquo;t live without it. For a long time I was in the second group and I just recently turned to the third one, and I&amp;rsquo;m slowly dragging all my fellow programmers with me!</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,181 @@
+<html>
+<head>
+    <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Vinny's Blog">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,700|Droid+Sans+Mono" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <title>Vinnie&#39;s Blog</title>
+</head>
+<body>
+    <div id="header">
+        <a href="/"><img class="me" src="/img/me.jpg" /></a>
+        <h2><a href="/">Vinnie's Blog</a></h2>
+        <section class="links">
+            <a href="http://twitter.com/IsolaVinicius"><img src="/img/twitter.png" /></a>
+            <a href="http://stackoverflow.com/users/2731402/visola"><img src="/img/stackoverflow.png" /></a>
+            <a href="https://github.com/visola/"><img src="/img/github.png" /></a>
+            <a href="/index.xml"><img src="/img/rss.png" /></a>
+        </section>
+    </div>
+    <div id="content">
+        
+  <h1>npm, packages and modules</h1>
+  <p class="published">April 1, 2017 by Vinicius Isola</p>
+  
+
+<p>Node.js is a powerful Javascript runtime that can be used to build general purpose applications. npm extends Node.js capabilities with packages built by 3rd parties. These packages provide a variety of functionalities that you might need when building your application.</p>
+
+<p>Let&rsquo;s learn a little bit more about npm is and how it can help us.</p>
+
+<!--
+<iframe id="ytplayer" type="text/html" width="640" height="360"
+  src="https://www.youtube.com/embed/ln5pM4S2NvU?autoplay=0&origin=https://visola.org"
+  frameborder="0"></iframe>
+-->
+
+<!-- more -->
+
+<h2 id="packages-and-modules">packages and modules</h2>
+
+<p>Before diving into npm lets first understand what are packages and modules.</p>
+
+<p>A package is a node.js application described by a <code>package.json</code> file that lives somewhere that npm can access and make it available for your application. This <em>somewhere</em> can be a folder in your computer, a local or remote tarball file or a name/version combination that maps to one of the previous and was published to <a href="https://npmjs.com">https://npmjs.com</a>. A git url that when cloned results in a folder containing a <code>package.json</code> file can also be used.</p>
+
+<p><em>npmjs.com</em> is npm&rsquo;s public registry. People can make packages available there for others to use. And that&rsquo;s where you&rsquo;ll probably get your packages from.</p>
+
+<p>But what&rsquo;s inside a package? Any Node.js application can live inside a package. That means that full blown applications can be packaged. But the most common thing that people create packages for are modules.</p>
+
+<p>A module is anything that can be loaded with the <code>require</code> function, which includes packages that have a <code>main</code> field declared in their <code>package.json</code>, a javascript file or folders that contain an <code>index.js</code> file.</p>
+
+<p>Modules are, in my opinion, the main reason why Node.js community grew so fast in the last few years. npm provides a simple way for you to include 3rd party modules into your application. You just tell npm what packages you want and it will download and make them available to you next time you start your node.js application.</p>
+
+<h2 id="npm">npm</h2>
+
+<p>So what&rsquo;s npm? <em>npm</em> is a command line application that get&rsquo;s installed when you install Node.js. It provides you with a simple way of installing 3rd party modules so that they are available inside your Node.js application.</p>
+
+<p>For a simple example, let&rsquo;s install and use a simple <code>request</code> package that&rsquo;s available in the registry.</p>
+
+<p><a href="https://www.npmjs.com/package/request">request</a> is a package that contains a module used to make HTTP requests in a simple way. Imagine that you want to download a file from the web in your application. Node.js provides APIs for you to do that, but they&rsquo;re lower level and a bit cumbersome to deal with. That&rsquo;s where <code>request</code> comes in.</p>
+
+<p>The first step is to install the module and for that, you just run the <code>npm install</code> command passing the name of the module:</p>
+
+<pre><code>$ npm install request
+/Users/visola/temp
+└─┬ request@2.81.0
+  ├── aws-sign2@0.6.0
+  ├── aws4@1.6.0
+...
+  │ └── punycode@1.4.1
+  ├── tunnel-agent@0.6.0
+  └── uuid@3.0.1
+
+npm WARN enoent ENOENT: no such file or directory, open '/.../package.json'
+npm WARN temp No description
+npm WARN temp No repository field.
+npm WARN temp No README data
+npm WARN temp No license field.
+</code></pre>
+
+<p>You can see that npm picked a version for you (the latest) and installed that package locally. It created a folder <code>node_modules</code> and put the downloaded package in there. You can check that directory and its <code>package.json</code> to see what&rsquo;s inside:</p>
+
+<pre><code>$ ls -ls node_modules/request/
+total 352
+136 -rw-r--r--   1 visola  staff  65653 Mar  9 10:55 CHANGELOG.md
+ 24 -rw-r--r--   1 visola  staff   9140 Nov 18 07:20 LICENSE
+ 88 -rw-r--r--   1 visola  staff  43747 Mar  9 10:52 README.md
+  8 -rwxr-xr-x   1 visola  staff   3993 Nov 18 07:20 index.js
+  0 drwxr-xr-x  12 visola  staff    408 Mar 31 17:56 lib
+  8 -rw-r--r--   1 visola  staff   4043 Mar 31 17:56 package.json
+ 88 -rw-r--r--   1 visola  staff  44706 Mar  9 10:52 request.js
+
+ $ cat node_modules/request/package.json
+ {
+...
+   &quot;dependencies&quot;: {
+     &quot;aws-sign2&quot;: &quot;~0.6.0&quot;,
+     &quot;aws4&quot;: &quot;^1.2.1&quot;,
+     &quot;caseless&quot;: &quot;~0.12.0&quot;,
+     &quot;combined-stream&quot;: &quot;~1.0.5&quot;,
+     &quot;extend&quot;: &quot;~3.0.0&quot;,
+     &quot;forever-agent&quot;: &quot;~0.6.1&quot;,
+     &quot;form-data&quot;: &quot;~2.1.1&quot;,
+     &quot;har-validator&quot;: &quot;~4.2.1&quot;,
+     &quot;hawk&quot;: &quot;~3.1.3&quot;,
+     &quot;http-signature&quot;: &quot;~1.1.0&quot;,
+     &quot;is-typedarray&quot;: &quot;~1.0.0&quot;,
+     &quot;isstream&quot;: &quot;~0.1.2&quot;,
+     &quot;json-stringify-safe&quot;: &quot;~5.0.1&quot;,
+     &quot;mime-types&quot;: &quot;~2.1.7&quot;,
+     &quot;oauth-sign&quot;: &quot;~0.8.1&quot;,
+     &quot;performance-now&quot;: &quot;^0.2.0&quot;,
+     &quot;qs&quot;: &quot;~6.4.0&quot;,
+     &quot;safe-buffer&quot;: &quot;^5.0.1&quot;,
+     &quot;stringstream&quot;: &quot;~0.0.4&quot;,
+     &quot;tough-cookie&quot;: &quot;~2.3.0&quot;,
+     &quot;tunnel-agent&quot;: &quot;^0.6.0&quot;,
+     &quot;uuid&quot;: &quot;^3.0.0&quot;
+   },
+   &quot;description&quot;: &quot;Simplified HTTP request client.&quot;,
+...
+   &quot;main&quot;: &quot;index.js&quot;,
+   &quot;name&quot;: &quot;request&quot;,
+...
+ }
+</code></pre>
+
+<p>In the <code>package.json</code> there&rsquo;re many details that we don&rsquo;t care right now. The two things that&rsquo;re important to notice are the <code>main</code> and <code>dependencies</code> properties.</p>
+
+<p>As it was explained before, packages with a <code>main</code> attribute contain a module. In this case it&rsquo;s the <code>lib</code> folder, which you can see contain a <code>index.js</code> file (so it&rsquo;s implicitly loaded).</p>
+
+<p>The <code>dependencies</code> attribute allow packages to have runtime dependencies. These runtime dependencies are required to run whatever the package contains and npm will automatically download and make available all dependencies that your dependencies have. You can check that the <code>node_modules</code> directory has many other directories in it. Those are <code>request</code>&rsquo;s dependencies:</p>
+
+<pre><code>$ ls -la node_modules/
+total 0
+drwxr-xr-x  64 visola  staff  2176 Feb 13 20:24 .
+drwxr-xr-x   3 visola  staff   102 Feb 13 20:16 ..
+drwxr-xr-x   7 visola  staff   238 Feb 13 20:24 .bin
+drwxr-xr-x   6 visola  staff   204 Feb 13 20:24 ansi-regex
+drwxr-xr-x   6 visola  staff   204 Feb 13 20:24 ansi-styles
+drwxr-xr-x   9 visola  staff   306 Feb 13 20:24 asn1
+...
+drwxr-xr-x  15 visola  staff   510 Feb 13 20:24 uuid
+drwxr-xr-x  13 visola  staff   442 Feb 13 20:24 verror
+drwxr-xr-x  11 visola  staff   374 Feb 13 20:24 xtend
+</code></pre>
+
+<p>So let&rsquo;s use our new installed modules. For that, lets create a file called <code>downloadImage.js</code> inside the same directory where we installed the <code>request</code> package. Add the following content to it:</p>
+
+<pre><code class="language-javascript">const request = require('request');
+const fs = require('fs');
+
+request('https://farm2.staticflickr.com/1706/25031430855_1f4b306d32_k_d.jpg')
+  .pipe(fs.createWriteStream('northern_lights.jpg'))
+  .on('close', function () {
+    console.log(&quot;Finished downloading the image.&quot;);
+  });
+</code></pre>
+
+<p>When you run your script using Node, you can see that the library did all the heavy lifting of &ldquo;talking HTTP&rdquo;, copy all bytes directly to a file and augumenting the request with helpful events like <code>close</code> which notifies when the download is finished.</p>
+
+<p>Here is how it looks when you run the script above:</p>
+
+<pre><code>$ node downloadImage.js
+Finished downloading the image.
+</code></pre>
+
+<p>And you can see that now you have the image in the current directory:</p>
+
+<pre><code>$ ls
+downloadImage.js	node_modules		northern_lights.jpg
+</code></pre>
+
+<h2 id="references">References</h2>
+
+<ul>
+<li>What is a package? At <a href="https://docs.npmjs.com/">npm&rsquo;s documentation</a>.</li>
+</ul>
+
+
+    </div>
+</body>
+</html>

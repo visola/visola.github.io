@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>spring boot on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/spring-boot/</link>
+    <description>Recent content in spring boot on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 17 Jan 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/spring-boot/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SPA with Spring Boot</title>
+      <link>http://example.org/posts/2018-01-17-spa-with-spring-boot/</link>
+      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2018-01-17-spa-with-spring-boot/</guid>
+      <description>Single page applications are becoming more and more common these days. If you work with Spring Boot and want to build your frontend using this architecture, you have two options: build the frontend on a separate repository and serve it using some HTTP server or serve your files from your Java application.
+This post explains the basic configuration needed so that you can manage routing on the frontend and still serve your static files from your Java/Spring application.</description>
+    </item>
+    
+  </channel>
+</rss>

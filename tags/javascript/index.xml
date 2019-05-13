@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>javascript on Vinnie&#39;s Blog</title>
+    <link>http://example.org/tags/javascript/</link>
+    <description>Recent content in javascript on Vinnie&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 01 Apr 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>npm, packages and modules</title>
+      <link>http://example.org/posts/2017-04-01-npm-packages-and-modules/</link>
+      <pubDate>Sat, 01 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2017-04-01-npm-packages-and-modules/</guid>
+      <description>Node.js is a powerful Javascript runtime that can be used to build general purpose applications. npm extends Node.js capabilities with packages built by 3rd parties. These packages provide a variety of functionalities that you might need when building your application.
+Let&amp;rsquo;s learn a little bit more about npm is and how it can help us.
+ -- packages and modules Before diving into npm lets first understand what are packages and modules.</description>
+    </item>
+    
+    <item>
+      <title>What is node.js</title>
+      <link>http://example.org/posts/2017-01-15-what-is-node.js/</link>
+      <pubDate>Sun, 15 Jan 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/posts/2017-01-15-what-is-node.js/</guid>
+      <description>Node.js is a runtime environment that can be used to build applications using the Javascript language outside the browser. It runs on top of the V8 engine, which is the engine that runs inside the Chromium and Chrome browsers.
+Let&amp;rsquo;s learn more details about what all of this means.
+ Piece by Piece V8 is an engine that interpret Javascript code. That means that you give it some Javascript text and it will execute it.</description>
+    </item>
+    
+    <item>
+      <title>RequireJS and Backbone on a Single Page Application - Part 2</title>
+      <link>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-2/</link>
+      <pubDate>Wed, 04 Nov 2015 22:00:00 -0400</pubDate>
+      
+      <guid>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-2/</guid>
+      <description>A Backbone app has three main pieces: routes, models/collections and views. In this part of the two posts I&amp;rsquo;m going to explain how to setup and use Backbone in a single page application while separating your code in a way that it will be simple to maintain and add new features.
+The first part of this tutorial lives here. The code for this post lives in my Blog&amp;rsquo;s GitHub repository under require-js-backbone.</description>
+    </item>
+    
+    <item>
+      <title>RequireJS and Backbone on a Single Page Application - Part 1</title>
+      <link>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-1/</link>
+      <pubDate>Wed, 04 Nov 2015 20:00:00 -0400</pubDate>
+      
+      <guid>http://example.org/posts/2015-11-04-requirejs-and-backbone-on-a-single-page-application-part-1/</guid>
+      <description>Building single page applications isn&amp;rsquo;t easy. As the app grows and gets more complex your Javascript code gets harder to maintain and duplicate logic start spreading all over the place. Breaking your code in well defined and self contained small modules help to keep the complexity low and organize the logic in an encapsulated and predictable way. But to do that it means that you now need some kind of dependency management system in place.</description>
+    </item>
+    
+  </channel>
+</rss>
